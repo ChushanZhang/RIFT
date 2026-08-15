@@ -1,0 +1,54 @@
+# @package _global_
+
+defaults:
+  - train
+  - override /task: robotwin_rift_3cam_384_1e-4
+  - _self_
+
+ckpt: null
+gpu_id: 0
+
+model:
+  load_text_encoder: true
+  skip_dit_load_from_pretrain: true
+  action_dit_pretrained_path: null
+
+EVALUATION:
+  # RoboTwin is an external dependency, not part of this repository. Set
+  # ROBOTWIN_ROOT or override this value with the path to its checkout.
+  robotwin_root: null
+  policy_name: rift_policy
+  task_name: null
+  task_config: demo_randomized
+  instruction_type: unseen
+  output_dir: ./evaluate_results/robotwin/${now:%Y%m%d_%H%M%S}
+
+  # Optional override for the task list used by the multi-task manager.
+  task_list_path: null
+
+  # Action inference
+  action_horizon: null
+  replan_steps: 24
+  num_inference_steps: 10
+  sigma_shift: null
+  text_cfg_scale: 1.0
+  negative_prompt: ""
+  rand_device: cpu
+  tiled: false
+  timing_enabled: false
+
+  # Runtime inputs
+  dataset_stats_path: null
+  device: cuda
+
+MULTIRUN:
+  enabled: false
+  num_gpus: 8
+  max_tasks_per_gpu: 2
+
+hydra:
+  job:
+    chdir: false
+  run:
+    dir: .
+  output_subdir: null
