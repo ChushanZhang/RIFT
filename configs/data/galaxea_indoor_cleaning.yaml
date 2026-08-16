@@ -1,0 +1,106 @@
+train:
+  _target_: rift.datasets.lerobot.robot_video_dataset.RobotVideoDataset
+  # Pure arm-and-gripper subset. An episode is excluded in full if any frame contains a
+  # nonzero chassis or torso action. The default root materializes only retained payloads.
+  dataset_dirs:
+    - ${oc.env:GALAXEA_DATA_ROOT,data/manipulation-clean}/Clean_Cutting_Board_20250627_002
+    - ${oc.env:GALAXEA_DATA_ROOT,data/manipulation-clean}/Clean_The_Cutting_Board_20250711_006
+    - ${oc.env:GALAXEA_DATA_ROOT,data/manipulation-clean}/Clean_The_Cutting_Board_20250804_012
+    - ${oc.env:GALAXEA_DATA_ROOT,data/manipulation-clean}/Clean_The_Sink_20250710_006
+    - ${oc.env:GALAXEA_DATA_ROOT,data/manipulation-clean}/Clean_The_Sink_20250721_008
+    - ${oc.env:GALAXEA_DATA_ROOT,data/manipulation-clean}/Clean_The_Sink_20250730_012
+    - ${oc.env:GALAXEA_DATA_ROOT,data/manipulation-clean}/Wipe_The_Desktop_20250801_012
+    - ${oc.env:GALAXEA_DATA_ROOT,data/manipulation-clean}/Wipe_The_Desktop_20250804_011
+
+  # Pin the audited dataset snapshot so future data changes fail instead of silently bypassing
+  # the episode-level motion filter.
+  expected_total_episodes:
+    Clean_Cutting_Board_20250627_002: 89
+    Clean_The_Cutting_Board_20250711_006: 56
+    Clean_The_Cutting_Board_20250804_012: 51
+    Clean_The_Sink_20250710_006: 79
+    Clean_The_Sink_20250721_008: 58
+    Clean_The_Sink_20250730_012: 46
+    Wipe_The_Desktop_20250801_012: 55
+    Wipe_The_Desktop_20250804_011: 127
+
+  exclude_episodes:
+    Clean_Cutting_Board_20250627_002: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 20, 21, 23, 24, 25, 31, 34, 45, 56, 67, 78, 85, 88]
+    Clean_The_Cutting_Board_20250711_006: [5, 6, 8, 9, 10, 11, 13, 14, 15, 16, 17, 18, 19, 20, 21, 24, 30, 31, 32, 33, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 46, 47, 48, 49, 50, 51]
+    Clean_The_Cutting_Board_20250804_012: [0, 1]
+    Clean_The_Sink_20250710_006: []
+    Clean_The_Sink_20250721_008: []
+    Clean_The_Sink_20250730_012: []
+    Wipe_The_Desktop_20250801_012: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 22, 25, 26, 27, 28, 29, 30, 31, 32, 33, 35, 36, 37, 38, 39, 40, 41, 42, 43]
+    Wipe_The_Desktop_20250804_011: [3, 4, 8, 11, 21, 70, 74, 84, 86, 89, 100, 103, 104, 107, 108, 111, 121, 123]
+
+  shape_meta:
+    images:
+      - key: head_rgb
+        raw_shape: [3, 224, 224]
+        shape: [3, 224, 224]
+      - key: left_wrist_rgb
+        raw_shape: [3, 224, 224]
+        shape: [3, 224, 224]
+      - key: right_wrist_rgb
+        raw_shape: [3, 224, 224]
+        shape: [3, 224, 224]
+    action:
+      - {key: left_arm, raw_shape: 6, shape: 6}
+      - {key: left_gripper, raw_shape: 1, shape: 1}
+      - {key: right_arm, raw_shape: 6, shape: 6}
+      - {key: right_gripper, raw_shape: 1, shape: 1}
+    state:
+      - {key: left_arm, raw_shape: 6, shape: 6}
+      - {key: left_gripper, raw_shape: 1, shape: 1}
+      - {key: right_arm, raw_shape: 6, shape: 6}
+      - {key: right_gripper, raw_shape: 1, shape: 1}
+
+  num_frames: 33
+  global_sample_stride: 1
+  action_video_freq_ratio: 4
+  # RoboTwin canvas: head 256x320 above two 128x160 wrist tiles.
+  video_size: [384, 320]
+  camera_key: null
+  val_set_proportion: 0.0
+  is_training_set: true
+  pretrained_norm_stats: ${oc.env:GALAXEA_NORM_STATS,data/manipulation-clean/stat-norm/dataset_stats.json}
+  skip_padding_as_possible: false
+  concat_multi_camera: robotwin
+
+  processor:
+    _target_: rift.datasets.lerobot.processors.rift_processor.RIFTProcessor
+    shape_meta: ${data.train.shape_meta}
+    num_obs_steps: ${data.train.num_frames}
+    num_output_cameras: 3
+    # Match the current Galaxea R1Lite policy: both arms and both grippers.
+    action_output_dim: 14
+    proprio_output_dim: 14
+
+    action_state_transforms:
+      - _target_: rift.datasets.lerobot.transforms.relative_joint.RelativeJointTransform
+        keys: [left_arm, right_arm]
+    use_stepwise_action_norm: true
+    norm_default_mode: z-score
+    norm_exception_mode:
+      action:
+        left_gripper: 0/100
+        right_gripper: 0/100
+
+    action_state_merger:
+      _target_: rift.datasets.lerobot.transforms.action_state_merger.ConcatLeftAlign
+
+    train_transforms:
+      - _target_: rift.datasets.lerobot.transforms.image.ToTensor
+      - _target_: torchvision.transforms.Resize
+        size: [224, 224]
+    val_transforms:
+      - _target_: rift.datasets.lerobot.transforms.image.ToTensor
+      - _target_: torchvision.transforms.Resize
+        size: [224, 224]
+
+    drop_high_level_prob: 1.0
+    use_zh_instruction: false
+
+  text_embedding_cache_dir: ${oc.env:GALAXEA_TEXT_CACHE,data/manipulation-clean/t5-cache}
+  context_len: 128

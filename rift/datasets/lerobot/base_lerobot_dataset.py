@@ -31,6 +31,10 @@ class BaseLerobotDataset(torch.utils.data.Dataset):
         is_training_set: bool = False,
         seed: int = 42,
 
+        # dataset curation (keys are dataset directory basenames)
+        expected_total_episodes: Optional[Dict[str, int]] = None,
+        exclude_episodes: Optional[Dict[str, List[int]]] = None,
+
         # sampling
         global_sample_stride: int = 1,
     ):
@@ -51,6 +55,51 @@ class BaseLerobotDataset(torch.utils.data.Dataset):
             repo_id = ds_dir
             meta = LeRobotDatasetMetadata(repo_id=repo_id, root=ds_root)
             metas.append(meta)
+
+        dataset_names = [Path(ds_dir).name for ds_dir in dataset_dirs]
+        if len(dataset_names) != len(set(dataset_names)):
+            raise ValueError(
+                "Dataset directory basenames must be unique when episode filtering is used."
+            )
+
+        expected_keys = set(dataset_names)
+        if expected_total_episodes is not None:
+            configured_keys = set(expected_total_episodes)
+            if configured_keys != expected_keys:
+                raise ValueError(
+                    "expected_total_episodes keys must exactly match dataset directory "
+                    f"basenames; missing={sorted(expected_keys - configured_keys)}, "
+                    f"extra={sorted(configured_keys - expected_keys)}"
+                )
+            for name, meta in zip(dataset_names, metas, strict=True):
+                expected = int(expected_total_episodes[name])
+                if meta.total_episodes != expected:
+                    raise ValueError(
+                        f"Dataset '{name}' has {meta.total_episodes} episodes, "
+                        f"expected {expected}. Re-audit the episode filter."
+                    )
+
+        excluded_by_dataset = {}
+        if exclude_episodes is not None:
+            configured_keys = set(exclude_episodes)
+            if configured_keys != expected_keys:
+                raise ValueError(
+                    "exclude_episodes keys must exactly match dataset directory "
+                    f"basenames; missing={sorted(expected_keys - configured_keys)}, "
+                    f"extra={sorted(configured_keys - expected_keys)}"
+                )
+            for name, meta in zip(dataset_names, metas, strict=True):
+                excluded = list(exclude_episodes[name])
+                if any(isinstance(idx, bool) or not isinstance(idx, int) for idx in excluded):
+                    raise TypeError(f"Excluded episode indices for '{name}' must be integers.")
+                if len(excluded) != len(set(excluded)):
+                    raise ValueError(f"Excluded episode indices for '{name}' must be unique.")
+                if any(idx < 0 or idx >= meta.total_episodes for idx in excluded):
+                    raise ValueError(
+                        f"Excluded episode index for '{name}' is outside "
+                        f"[0, {meta.total_episodes})."
+                    )
+                excluded_by_dataset[name] = set(excluded)
 
         fps_list = [m.fps for m in metas]
         assert len(set(fps_list)) == 1, f"All dataset_dirs must have the same fps, got {fps_list}"
@@ -87,19 +136,45 @@ class BaseLerobotDataset(torch.utils.data.Dataset):
 
         episodes = {}
         if val_set_proportion < 1e-6:
-            for meta in metas:
-                episodes.update({meta.repo_id: list(range(meta.total_episodes))})
+            for name, meta in zip(dataset_names, metas, strict=True):
+                excluded = excluded_by_dataset.get(name, set())
+                episodes.update(
+                    {
+                        meta.repo_id: [
+                            idx for idx in range(meta.total_episodes) if idx not in excluded
+                        ]
+                    }
+                )
         else:
-            for meta in metas:
-                split_idx = int(meta.total_episodes * (1 - val_set_proportion))
+            for name, meta in zip(dataset_names, metas, strict=True):
+                excluded = excluded_by_dataset.get(name, set())
+                episode_indices = [
+                    idx for idx in range(meta.total_episodes) if idx not in excluded
+                ]
+                split_idx = int(len(episode_indices) * (1 - val_set_proportion))
                 # random shuffle episode indices before splitting
-                episode_indices = list(range(meta.total_episodes))
                 rng = np.random.default_rng(seed)
                 rng.shuffle(episode_indices)
                 if self.is_training_set:
                     episodes.update({meta.repo_id: [episode_indices[i] for i in range(split_idx)]})
                 else:
-                    episodes.update({meta.repo_id: [episode_indices[i] for i in range(split_idx, meta.total_episodes)]})
+                    episodes.update(
+                        {
+                            meta.repo_id: [
+                                episode_indices[i]
+                                for i in range(split_idx, len(episode_indices))
+                            ]
+                        }
+                    )
+
+        if exclude_episodes is not None:
+            kept_episodes = sum(len(indices) for indices in episodes.values())
+            excluded_episodes = sum(len(indices) for indices in excluded_by_dataset.values())
+            logger.info(
+                "Episode filter retained %d episodes and excluded %d episodes.",
+                kept_episodes,
+                excluded_episodes,
+            )
 
         self.multi_dataset = MultiLeRobotDataset(
             dataset_dirs=self.dataset_dirs,

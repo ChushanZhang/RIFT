@@ -122,7 +122,17 @@ def _resolve_context_len(context_lens: set[int]) -> int:
     return next(iter(context_lens))
 
 
-def _read_unique_prompts(dataset_dirs: list[str]) -> list[str]:
+def _normalize_task_text(task: Any, *, use_zh_instruction: bool) -> str:
+    text = str(task)
+    if "@" in text:
+        zh, english = text.split("@", 1)
+        text = zh if use_zh_instruction else english
+    return text
+
+
+def _read_unique_prompts(
+    dataset_dirs: list[str], *, use_zh_instruction: bool = False
+) -> list[str]:
     prompts: list[str] = []
     seen = set()
     total_task_rows = 0
@@ -140,7 +150,9 @@ def _read_unique_prompts(dataset_dirs: list[str]) -> list[str]:
                 record = json.loads(line)
                 if "task" not in record:
                     raise KeyError(f"Missing `task` field at {tasks_path}:{line_idx}")
-                task = str(record["task"])
+                task = _normalize_task_text(
+                    record["task"], use_zh_instruction=use_zh_instruction
+                )
                 prompt = DEFAULT_PROMPT.format(task=task)
                 total_task_rows += 1
                 if prompt not in seen:
@@ -210,7 +222,12 @@ def main(cfg: DictConfig):
     else:
         if not dataset_dirs:
             raise ValueError("No `dataset_dirs` found under `cfg.data`.")
-        prompts = _read_unique_prompts(dataset_dirs)
+        use_zh_instruction = _to_bool(
+            cfg.data.train.processor.get("use_zh_instruction", False)
+        )
+        prompts = _read_unique_prompts(
+            dataset_dirs, use_zh_instruction=use_zh_instruction
+        )
     if not prompts:
         logger.warning("No prompts found from tasks.jsonl; nothing to do.")
         return

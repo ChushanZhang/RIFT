@@ -34,6 +34,8 @@ class RobotVideoDataset(torch.utils.data.Dataset):
         pretrained_norm_stats=None,
         val_set_proportion=0.05,
         is_training_set=False,
+        expected_total_episodes=None,
+        exclude_episodes=None,
         global_sample_stride=1,
         action_video_freq_ratio: int = 1,
         skip_padding_as_possible: bool = False,
@@ -48,6 +50,16 @@ class RobotVideoDataset(torch.utils.data.Dataset):
             action_size=num_frames - 1,
             val_set_proportion=val_set_proportion,
             is_training_set=is_training_set,
+            expected_total_episodes=(
+                OmegaConf.to_container(expected_total_episodes, resolve=True)
+                if isinstance(expected_total_episodes, DictConfig)
+                else expected_total_episodes
+            ),
+            exclude_episodes=(
+                OmegaConf.to_container(exclude_episodes, resolve=True)
+                if isinstance(exclude_episodes, DictConfig)
+                else exclude_episodes
+            ),
             global_sample_stride=global_sample_stride,
         )
     

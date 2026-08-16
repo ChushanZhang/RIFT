@@ -1,0 +1,33 @@
+# @package _global_
+
+defaults:
+  - override /data: galaxea_indoor_cleaning
+  - override /model: rift
+  - _self_
+
+batch_size: 16
+num_workers: 6
+
+model:
+  # RoboTwin-style 384x320 canvas -> 12x10 tokens per latent frame.
+  anticip_future_tokens: 240
+  anticip_latent_t: 3
+  anticip_anneal_total_steps: ${max_steps}
+  mot_checkpoint_mixed_attn: true
+  action_dit_pretrained_path: ${oc.env:ACTION_DIT_PRETRAINED_PATH,checkpoints/ActionDiT_linear_interp_Wan22_alphascale_1024hdim.pt}
+
+lr_scheduler_type: cosine
+learning_rate: 1.0e-4
+num_epochs: 1
+# One pass over 445 pure arm-and-gripper episodes (379,564 frames).
+max_steps: 2966
+log_every: 10
+save_every: 2000
+
+gradient_accumulation_steps: 1
+weight_decay: 1.0e-2
+resume: null
+
+wandb:
+  project: rift
+  name: galaxea_indoor_cleaning_rift_3cam224_1e-4
