@@ -400,49 +400,51 @@ class Wan22Trainer:
                         self.scheduler.step()
                     self.optimizer.zero_grad(set_to_none=True)
                     self.global_step += 1
-                    global_loss = float(
-                        self.accelerator.gather(loss.detach().float().reshape(1)).mean().item()
-                    )
-                    global_loss_metrics = {}
-                    for key, value in loss_dict.items():
-                        metric_tensor = torch.tensor(float(value), device=loss.device, dtype=torch.float32).reshape(1)
-                        global_loss_metrics[key] = float(
-                            self.accelerator.gather(metric_tensor).mean().item()
+                    should_log = self.log_every > 0 and self.global_step % self.log_every == 0
+                    if should_log:
+                        global_loss = float(
+                            self.accelerator.gather(loss.detach().float().reshape(1)).mean().item()
                         )
-                    grad_norm_tensor = torch.tensor(grad_norm, device=loss.device, dtype=torch.float32)
-                    global_grad_norm = float(self.accelerator.gather(grad_norm_tensor).mean().item())
+                        global_loss_metrics = {}
+                        for key, value in loss_dict.items():
+                            metric_tensor = torch.tensor(float(value), device=loss.device, dtype=torch.float32).reshape(1)
+                            global_loss_metrics[key] = float(
+                                self.accelerator.gather(metric_tensor).mean().item()
+                            )
+                        grad_norm_tensor = torch.tensor(grad_norm, device=loss.device, dtype=torch.float32)
+                        global_grad_norm = float(self.accelerator.gather(grad_norm_tensor).mean().item())
 
-                    current_lr = float(self.optimizer.param_groups[0]["lr"])
+                        current_lr = float(self.optimizer.param_groups[0]["lr"])
 
-                    if self.log_every > 0 and self.global_step % self.log_every == 0 and self.accelerator.is_main_process:
-                        eta_str, steps_per_sec = self._estimate_eta()
-                        description = "[train] epoch=%d step=%d/%d loss=%.4f " % (
-                            self.epoch,
-                            self.global_step,
-                            self.max_steps,
-                            global_loss,
-                        )
-                        if global_loss_metrics:
-                            detail_str = " ".join([f"{k}={v:.4f}" for k, v in sorted(global_loss_metrics.items())])
-                            description += detail_str + " "
-                        description += "lr=%.2e speed=%.2f step/s, %.2f samples/s eta=%s" % (
-                            current_lr,
-                            steps_per_sec,
-                            steps_per_sec * self.batch_size * self.accelerator.num_processes,
-                            eta_str,
-                        )
-                        logger.info(description)
+                        if self.accelerator.is_main_process:
+                            eta_str, steps_per_sec = self._estimate_eta()
+                            description = "[train] epoch=%d step=%d/%d loss=%.4f " % (
+                                self.epoch,
+                                self.global_step,
+                                self.max_steps,
+                                global_loss,
+                            )
+                            if global_loss_metrics:
+                                detail_str = " ".join([f"{k}={v:.4f}" for k, v in sorted(global_loss_metrics.items())])
+                                description += detail_str + " "
+                            description += "lr=%.2e speed=%.2f step/s, %.2f samples/s eta=%s" % (
+                                current_lr,
+                                steps_per_sec,
+                                steps_per_sec * self.batch_size * self.accelerator.num_processes,
+                                eta_str,
+                            )
+                            logger.info(description)
 
-                        wandb_payload = {
-                            "train/loss": global_loss,
-                            "train/grad_norm": global_grad_norm,
-                            "train/lr": current_lr,
-                            "performance/steps_per_sec": steps_per_sec,
-                            "performance/samples_per_sec": steps_per_sec * self.batch_size * self.accelerator.num_processes,
-                        }
-                        for key, value in global_loss_metrics.items():
-                            wandb_payload[f"train/{key}"] = value
-                        self._wandb_log(wandb_payload)
+                            wandb_payload = {
+                                "train/loss": global_loss,
+                                "train/grad_norm": global_grad_norm,
+                                "train/lr": current_lr,
+                                "performance/steps_per_sec": steps_per_sec,
+                                "performance/samples_per_sec": steps_per_sec * self.batch_size * self.accelerator.num_processes,
+                            }
+                            for key, value in global_loss_metrics.items():
+                                wandb_payload[f"train/{key}"] = value
+                            self._wandb_log(wandb_payload)
 
                     if self.save_every > 0 and self.global_step % self.save_every == 0:
                         ckpt_info = self.save_checkpoint()
