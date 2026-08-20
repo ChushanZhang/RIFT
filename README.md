@@ -16,6 +16,7 @@ Official implementation of
 
 - [Released checkpoint](#released-checkpoint)
 - [Released scope](#released-scope)
+- [Real-world Galaxea](#real-world-galaxea)
 - [Repository layout](#repository-layout)
 - [Environment](#environment)
 - [Model preparation](#model-preparation)
@@ -68,6 +69,26 @@ They fix the following design:
 - a motion-aware render target and late loss annealing;
 - a late conditioning-noise curriculum limited to the render branch;
 - flow matching as the representation-shaping objective.
+
+## Real-world Galaxea
+
+This repository includes a real-world Galaxea indoor-cleaning recipe built around
+the same filtered 445-episode subset:
+
+- [`configs/data/galaxea_indoor_cleaning.yaml`](./configs/data/galaxea_indoor_cleaning.yaml);
+- [`configs/task/galaxea_indoor_cleaning_rift_3cam224_1e-4.yaml`](./configs/task/galaxea_indoor_cleaning_rift_3cam224_1e-4.yaml).
+
+Provide machine-specific paths through `GALAXEA_DATA_ROOT`,
+`GALAXEA_NORM_STATS`, and `GALAXEA_TEXT_CACHE` rather than committing them to the
+repository.
+
+The matching FastWAM baseline was trained for 10 epochs (14,830 optimizer steps)
+on this subset. Its released files are available on
+[Hugging Face](https://huggingface.co/PoopBear/RIFT/tree/main/fastwam/galaxea_indoor_cleaning_3cam224_10ep).
+
+RIFT training on the same subset is currently in progress; a real-world RIFT
+checkpoint has not yet been released. No real-world evaluation result is claimed
+here.
 
 ## Repository layout
 
@@ -238,6 +259,9 @@ bash scripts/train_zero2.sh "$N" task=libero_rift_2cam224_1e-4
 
 # RoboTwin
 bash scripts/train_zero2.sh "$N" task=robotwin_rift_3cam_384_1e-4
+
+# Real-world Galaxea
+bash scripts/train_zero2.sh "$N" task=galaxea_indoor_cleaning_rift_3cam224_1e-4
 ```
 
 Set `N` to the number of GPUs to use. Dataset, model, batch size, and

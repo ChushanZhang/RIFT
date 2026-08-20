@@ -16,6 +16,7 @@
 
 - [已发布 checkpoint](#已发布-checkpoint)
 - [发布范围](#发布范围)
+- [真实环境 Galaxea](#真实环境-galaxea)
 - [仓库结构](#仓库结构)
 - [环境](#环境)
 - [模型准备](#模型准备)
@@ -65,6 +66,24 @@ metadata。下载的 `config.yaml` 与 `configs/model/rift.yaml` 一致，并使
 - motion-aware render target 和后期 loss annealing；
 - 仅作用于 render branch 的后期 conditioning-noise curriculum；
 - flow matching 作为塑造 representation 的 objective。
+
+## 真实环境 Galaxea
+
+本仓库包含真实环境 Galaxea 室内清洁训练配方，使用同一个过滤后的 445-episode
+子集：
+
+- [`configs/data/galaxea_indoor_cleaning.yaml`](./configs/data/galaxea_indoor_cleaning.yaml)；
+- [`configs/task/galaxea_indoor_cleaning_rift_3cam224_1e-4.yaml`](./configs/task/galaxea_indoor_cleaning_rift_3cam224_1e-4.yaml)。
+
+机器相关路径通过 `GALAXEA_DATA_ROOT`、`GALAXEA_NORM_STATS` 和
+`GALAXEA_TEXT_CACHE` 提供，不写入仓库。
+
+对应的 FastWAM baseline 在该子集上训练了 10 epochs（14,830 optimizer
+steps）。发布文件位于
+[Hugging Face](https://huggingface.co/PoopBear/RIFT/tree/main/fastwam/galaxea_indoor_cleaning_3cam224_10ep)。
+
+同一子集上的 RIFT 仍在训练，真实环境 RIFT checkpoint 尚未发布。这里不声明
+任何真实环境评测结果。
 
 ## 仓库结构
 
@@ -229,6 +248,9 @@ bash scripts/train_zero2.sh "$N" task=libero_rift_2cam224_1e-4
 
 # RoboTwin
 bash scripts/train_zero2.sh "$N" task=robotwin_rift_3cam_384_1e-4
+
+# 真实环境 Galaxea
+bash scripts/train_zero2.sh "$N" task=galaxea_indoor_cleaning_rift_3cam224_1e-4
 ```
 
 将 `N` 设为使用的 GPU 数量。Dataset、model、batch size 和 schedule 由所选 task 配置提供。
