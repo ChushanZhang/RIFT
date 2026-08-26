@@ -16,6 +16,7 @@ Official implementation of
 
 - [Released checkpoint](#released-checkpoint)
 - [Released scope](#released-scope)
+- [Real-world Galaxea](#real-world-galaxea)
 - [Repository layout](#repository-layout)
 - [Environment](#environment)
 - [Model preparation](#model-preparation)
@@ -68,6 +69,27 @@ They fix the following design:
 - a motion-aware render target and late loss annealing;
 - a late conditioning-noise curriculum limited to the render branch;
 - flow matching as the representation-shaping objective.
+
+## Real-world Galaxea
+
+This repository includes a real-world Galaxea indoor-cleaning recipe built around
+the same filtered 445-episode subset:
+
+- [`configs/data/galaxea_indoor_cleaning.yaml`](./configs/data/galaxea_indoor_cleaning.yaml);
+- [`configs/task/galaxea_indoor_cleaning_rift_3cam224_1e-4.yaml`](./configs/task/galaxea_indoor_cleaning_rift_3cam224_1e-4.yaml).
+
+Provide machine-specific paths through `GALAXEA_DATA_ROOT`,
+`GALAXEA_NORM_STATS`, and `GALAXEA_TEXT_CACHE` rather than committing them to the
+repository.
+
+Weight-only checkpoints trained for 10 epochs on this subset are available on
+[Hugging Face](https://huggingface.co/PoopBear/RIFT):
+
+- [FastWAM baseline](https://huggingface.co/PoopBear/RIFT/tree/main/fastwam/galaxea_indoor_cleaning_3cam224_10ep);
+- [FastWAM-Joint](https://huggingface.co/PoopBear/RIFT/tree/main/fastwam_joint/galaxea_indoor_cleaning_3cam224_10ep);
+- [RIFT](https://huggingface.co/PoopBear/RIFT/tree/main/rift/galaxea_indoor_cleaning_3cam224_10ep).
+
+No real-world evaluation result is claimed here.
 
 ## Repository layout
 
@@ -238,6 +260,13 @@ bash scripts/train_zero2.sh "$N" task=libero_rift_2cam224_1e-4
 
 # RoboTwin
 bash scripts/train_zero2.sh "$N" task=robotwin_rift_3cam_384_1e-4
+
+# Real-world Galaxea
+bash scripts/train_zero2.sh "$N" \
+  task=galaxea_indoor_cleaning_rift_3cam224_1e-4 \
+  batch_size=16 gradient_accumulation_steps=2 \
+  num_epochs=10 max_steps=14830 \
+  log_every=10 save_every=0 resume=null wandb.enabled=false
 ```
 
 Set `N` to the number of GPUs to use. Dataset, model, batch size, and
