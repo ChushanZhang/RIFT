@@ -85,8 +85,6 @@ metadata。下载的 `config.yaml` 与 `configs/model/rift.yaml` 一致，并使
 - [FastWAM-Joint](https://huggingface.co/PoopBear/RIFT/tree/main/fastwam_joint/galaxea_indoor_cleaning_3cam224_10ep)；
 - [RIFT](https://huggingface.co/PoopBear/RIFT/tree/main/rift/galaxea_indoor_cleaning_3cam224_10ep)。
 
-这里不声明任何真实环境评测结果。
-
 ## 仓库结构
 
 ```text
