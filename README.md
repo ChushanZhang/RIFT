@@ -89,8 +89,6 @@ Weight-only checkpoints trained for 10 epochs on this subset are available on
 - [FastWAM-Joint](https://huggingface.co/PoopBear/RIFT/tree/main/fastwam_joint/galaxea_indoor_cleaning_3cam224_10ep);
 - [RIFT](https://huggingface.co/PoopBear/RIFT/tree/main/rift/galaxea_indoor_cleaning_3cam224_10ep).
 
-No real-world evaluation result is claimed here.
-
 ## Repository layout
 
 ```text
