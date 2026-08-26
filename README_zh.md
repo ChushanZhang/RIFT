@@ -78,12 +78,14 @@ metadata。下载的 `config.yaml` 与 `configs/model/rift.yaml` 一致，并使
 机器相关路径通过 `GALAXEA_DATA_ROOT`、`GALAXEA_NORM_STATS` 和
 `GALAXEA_TEXT_CACHE` 提供，不写入仓库。
 
-对应的 FastWAM baseline 在该子集上训练了 10 epochs（14,830 optimizer
-steps）。发布文件位于
-[Hugging Face](https://huggingface.co/PoopBear/RIFT/tree/main/fastwam/galaxea_indoor_cleaning_3cam224_10ep)。
+以下仅权重 checkpoint 均在该子集上训练 10 epochs，并发布于
+[Hugging Face](https://huggingface.co/PoopBear/RIFT)：
 
-同一子集上的 RIFT 仍在训练，真实环境 RIFT checkpoint 尚未发布。这里不声明
-任何真实环境评测结果。
+- [FastWAM baseline](https://huggingface.co/PoopBear/RIFT/tree/main/fastwam/galaxea_indoor_cleaning_3cam224_10ep)；
+- [FastWAM-Joint](https://huggingface.co/PoopBear/RIFT/tree/main/fastwam_joint/galaxea_indoor_cleaning_3cam224_10ep)；
+- [RIFT](https://huggingface.co/PoopBear/RIFT/tree/main/rift/galaxea_indoor_cleaning_3cam224_10ep)。
+
+这里不声明任何真实环境评测结果。
 
 ## 仓库结构
 
@@ -250,7 +252,11 @@ bash scripts/train_zero2.sh "$N" task=libero_rift_2cam224_1e-4
 bash scripts/train_zero2.sh "$N" task=robotwin_rift_3cam_384_1e-4
 
 # 真实环境 Galaxea
-bash scripts/train_zero2.sh "$N" task=galaxea_indoor_cleaning_rift_3cam224_1e-4
+bash scripts/train_zero2.sh "$N" \
+  task=galaxea_indoor_cleaning_rift_3cam224_1e-4 \
+  batch_size=16 gradient_accumulation_steps=2 \
+  num_epochs=10 max_steps=14830 \
+  log_every=10 save_every=0 resume=null wandb.enabled=false
 ```
 
 将 `N` 设为使用的 GPU 数量。Dataset、model、batch size 和 schedule 由所选 task 配置提供。

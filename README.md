@@ -82,13 +82,14 @@ Provide machine-specific paths through `GALAXEA_DATA_ROOT`,
 `GALAXEA_NORM_STATS`, and `GALAXEA_TEXT_CACHE` rather than committing them to the
 repository.
 
-The matching FastWAM baseline was trained for 10 epochs (14,830 optimizer steps)
-on this subset. Its released files are available on
-[Hugging Face](https://huggingface.co/PoopBear/RIFT/tree/main/fastwam/galaxea_indoor_cleaning_3cam224_10ep).
+Weight-only checkpoints trained for 10 epochs on this subset are available on
+[Hugging Face](https://huggingface.co/PoopBear/RIFT):
 
-RIFT training on the same subset is currently in progress; a real-world RIFT
-checkpoint has not yet been released. No real-world evaluation result is claimed
-here.
+- [FastWAM baseline](https://huggingface.co/PoopBear/RIFT/tree/main/fastwam/galaxea_indoor_cleaning_3cam224_10ep);
+- [FastWAM-Joint](https://huggingface.co/PoopBear/RIFT/tree/main/fastwam_joint/galaxea_indoor_cleaning_3cam224_10ep);
+- [RIFT](https://huggingface.co/PoopBear/RIFT/tree/main/rift/galaxea_indoor_cleaning_3cam224_10ep).
+
+No real-world evaluation result is claimed here.
 
 ## Repository layout
 
@@ -261,7 +262,11 @@ bash scripts/train_zero2.sh "$N" task=libero_rift_2cam224_1e-4
 bash scripts/train_zero2.sh "$N" task=robotwin_rift_3cam_384_1e-4
 
 # Real-world Galaxea
-bash scripts/train_zero2.sh "$N" task=galaxea_indoor_cleaning_rift_3cam224_1e-4
+bash scripts/train_zero2.sh "$N" \
+  task=galaxea_indoor_cleaning_rift_3cam224_1e-4 \
+  batch_size=16 gradient_accumulation_steps=2 \
+  num_epochs=10 max_steps=14830 \
+  log_every=10 save_every=0 resume=null wandb.enabled=false
 ```
 
 Set `N` to the number of GPUs to use. Dataset, model, batch size, and
