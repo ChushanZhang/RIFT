@@ -48,12 +48,7 @@ checkpoints/rift/
 └── config.yaml
 ```
 
-Keep `dataset_stats.json` with the checkpoint to preserve the normalization
-metadata used by the released weights. The downloaded `config.yaml` mirrors
-`configs/model/rift.yaml` and uses the current `rift.*` namespace. Compose it
-with this repository's task and data configs. The checkpoint stores tensor
-state rather than pickled model classes, so the namespace migration does not
-change its weights.
+Keep `dataset_stats.json` with the checkpoint for normalization.
 
 ## Released scope
 
@@ -112,7 +107,7 @@ RIFT/
 
 ## Environment
 
-The known-good environment uses Python 3.10, PyTorch 2.7.1, and CUDA 12.8:
+Use Python 3.10, PyTorch 2.7.1, and CUDA 12.8:
 
 ```bash
 conda create -n rift python=3.10 -y
@@ -156,7 +151,7 @@ or a high-RAM CPU host. `DIFFSYNTH_DOWNLOAD_SOURCE` accepts `huggingface` or
 
 ### LIBERO
 
-Download the four preprocessed LIBERO archives at the pinned dataset revision:
+Download the four preprocessed LIBERO archives:
 
 ```bash
 mkdir -p data/downloads/libero
@@ -166,7 +161,6 @@ hf download yuanty/LIBERO-fastwam \
   libero_object_no_noops_lerobot.tar.gz \
   libero_spatial_no_noops_lerobot.tar.gz \
   --repo-type dataset \
-  --revision 117413dc0ca99c7cd64036c4eaa4a316c537d692 \
   --local-dir data/downloads/libero
 
 mkdir -p data/libero_mujoco3.3.2
@@ -185,28 +179,12 @@ data/libero_mujoco3.3.2/
 └── libero_spatial_no_noops_lerobot/
 ```
 
-The release reads the dataset MP4 files directly and does not require a local
-video cache. The files use AV1 video; the pinned PyAV package is the fallback
-decoder when TorchCodec is unavailable. Verify one real file before training:
-
-```bash
-python - <<'PY'
-from pathlib import Path
-import av
-
-path = next(Path("data/libero_mujoco3.3.2").rglob("*.mp4"))
-with av.open(str(path)) as container:
-    frame = next(container.decode(video=0))
-print(path, frame.width, frame.height)
-PY
-```
-
-Dataset files and their license are not redistributed here.
+The MP4 files use AV1 video. PyAV is used when TorchCodec is unavailable.
 
 ### RoboTwin
 
-Download the fixed preprocessed RoboTwin snapshot. The eight archive parts use
-about 84 GB before extraction:
+Download the preprocessed RoboTwin dataset. The eight archive parts use about
+84 GB before extraction:
 
 ```bash
 hf download yuanty/robotwin2.0-fastwam \
@@ -216,7 +194,6 @@ hf download yuanty/robotwin2.0-fastwam \
   robotwin2.0.tar.gz.part-04 robotwin2.0.tar.gz.part-05 \
   robotwin2.0.tar.gz.part-06 robotwin2.0.tar.gz.part-07 \
   --repo-type dataset \
-  --revision aac262c35d02cc71b2f6ef670bd65fd9f2bb2547 \
   --local-dir data/downloads/robotwin2.0
 
 mkdir -p data/robotwin2.0
@@ -226,8 +203,7 @@ cat data/downloads/robotwin2.0/robotwin2.0.tar.gz.part-* | \
 ```
 
 The resulting dataset directory is `data/robotwin2.0/robotwin2.0/`, matching
-[`configs/data/robotwin.yaml`](./configs/data/robotwin.yaml). The pinned snapshot
-produced 6,011,575 training samples after the configured split.
+[`configs/data/robotwin.yaml`](./configs/data/robotwin.yaml).
 
 ## Training
 
@@ -272,21 +248,15 @@ schedule settings come from the selected task configuration.
 
 ## Benchmark evaluation
 
-The evaluation layout follows FastWAM's independent benchmark entrypoints: one
-single-task worker plus a multi-GPU manager for each benchmark. The RIFT model,
-task configs, checkpoint schema, and two-camera/three-camera inputs replace the
-upstream policy defaults. The simulators remain external dependencies; this
-repository does not vendor either benchmark.
+Evaluation uses separate LIBERO and RoboTwin entrypoints.
 
 ### LIBERO
 
 Install the [official LIBERO environment](https://github.com/Lifelong-Robot-Learning/LIBERO)
-in the RIFT environment and use MuJoCo 3.3.2. The evaluation path was tested
-with LIBERO commit `8f1084e3132a39270c3a13ebe37270a43ece2a01`:
+and MuJoCo 3.3.2:
 
 ```bash
 git clone https://github.com/Lifelong-Robot-Learning/LIBERO.git /path/to/LIBERO
-git -C /path/to/LIBERO checkout 8f1084e3132a39270c3a13ebe37270a43ece2a01
 pip install -e /path/to/LIBERO
 pip install mujoco==3.3.2
 ```
@@ -304,6 +274,21 @@ python experiments/libero/run_libero_manager.py \
 Results are written below `evaluate_results/libero/` as per-task JSON files,
 `summary.json`, `summary.csv`, and `task_success_rates.csv`.
 
+### LIBERO-Plus
+
+Install [LIBERO-Plus](https://github.com/sylvestf/LIBERO-plus), then run:
+
+```bash
+LIBERO_PLUS_ROOT=/path/to/LIBERO-plus \
+  bash scripts/run_libero_plus.sh \
+  ./checkpoints/rift/rift_step021700.pt \
+  ./checkpoints/rift/dataset_stats.json \
+  ./evaluate_results/libero_plus
+```
+
+The launcher evaluates one rollout per task and resumes from completed task
+receipts. Set `GPU_IDS` and `WORKERS_PER_GPU` to control parallelism.
+
 ### RoboTwin
 
 Install [RoboTwin](https://github.com/RoboTwin-Platform/RoboTwin) separately,
@@ -313,8 +298,6 @@ RoboTwin source is copied into this repository.
 
 ```bash
 git clone https://github.com/RoboTwin-Platform/RoboTwin.git /path/to/RoboTwin
-git -C /path/to/RoboTwin checkout bf44be51cf5717a5595ce59447f2cf5263d2aa95
-# Complete RoboTwin's environment and asset installation at this revision.
 export ROBOTWIN_ROOT=/path/to/RoboTwin
 python experiments/robotwin/run_robotwin_manager.py \
   task=robotwin_rift_3cam_384_1e-4 \
