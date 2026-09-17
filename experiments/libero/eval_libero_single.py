@@ -310,6 +310,8 @@ def run_single_episode(
     *,
     action_horizon: int,
     model_device: str,
+    collect_rollout_images: bool = True,
+    show_progress: bool = True,
 ) -> tuple[bool, list[dict[str, np.ndarray]]]:
     maximum_steps = _get_max_steps(str(cfg.EVALUATION.task_suite_name))
     wait_steps = int(cfg.EVALUATION.get("num_steps_wait", 30))
@@ -331,7 +333,11 @@ def run_single_episode(
     rollout_images: list[dict[str, np.ndarray]] = []
     success = False
 
-    progress = tqdm(total=maximum_steps, desc=f"Episode {episode_idx + 1}")
+    progress = (
+        tqdm(total=maximum_steps, desc=f"Episode {episode_idx + 1}")
+        if show_progress
+        else None
+    )
     try:
         for step in range(maximum_steps):
             if not pending_actions:
@@ -344,7 +350,8 @@ def run_single_episode(
                     action_horizon=action_horizon,
                     model_device=model_device,
                 )
-                rollout_images.append(images)
+                if collect_rollout_images:
+                    rollout_images.append(images)
                 if ensembler is None:
                     pending_actions = action_chunk[:replan_steps].tolist()
                 else:
@@ -354,15 +361,18 @@ def run_single_episode(
                         for timestamp in range(step, step + replan_steps)
                     ]
             else:
-                rollout_images.append(get_libero_image(obs))
+                if collect_rollout_images:
+                    rollout_images.append(get_libero_image(obs))
 
             obs, _, done, _ = env.step(pending_actions.pop(0))
-            progress.update(1)
+            if progress is not None:
+                progress.update(1)
             if bool(done):
                 success = True
                 break
     finally:
-        progress.close()
+        if progress is not None:
+            progress.close()
     return success, rollout_images
 
 
