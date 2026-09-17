@@ -47,10 +47,7 @@ checkpoints/rift/
 └── config.yaml
 ```
 
-将 `dataset_stats.json` 与 checkpoint 放在一起，以保留发布权重使用的 normalization
-metadata。下载的 `config.yaml` 与 `configs/model/rift.yaml` 一致，并使用当前的
-`rift.*` namespace；运行时请与本仓库的 task 和 data configs 组合。Checkpoint
-保存的是 tensor state，而不是 pickle 的模型类，因此 namespace 迁移不会改变权重。
+将 `dataset_stats.json` 与 checkpoint 放在同一目录，用于动作归一化。
 
 ## 发布范围
 
@@ -108,7 +105,7 @@ RIFT/
 
 ## 环境
 
-已验证的环境使用 Python 3.10、PyTorch 2.7.1 和 CUDA 12.8：
+使用 Python 3.10、PyTorch 2.7.1 和 CUDA 12.8：
 
 ```bash
 conda create -n rift python=3.10 -y
@@ -148,7 +145,7 @@ python scripts/preprocess_action_dit_backbone.py \
 
 ### LIBERO
 
-从固定 dataset revision 下载四个预处理后的 LIBERO 压缩包：
+下载四个预处理后的 LIBERO 压缩包：
 
 ```bash
 mkdir -p data/downloads/libero
@@ -158,7 +155,6 @@ hf download yuanty/LIBERO-fastwam \
   libero_object_no_noops_lerobot.tar.gz \
   libero_spatial_no_noops_lerobot.tar.gz \
   --repo-type dataset \
-  --revision 117413dc0ca99c7cd64036c4eaa4a316c537d692 \
   --local-dir data/downloads/libero
 
 mkdir -p data/libero_mujoco3.3.2
@@ -177,26 +173,11 @@ data/libero_mujoco3.3.2/
 └── libero_spatial_no_noops_lerobot/
 ```
 
-发布配置直接读取数据集 MP4，不需要本地 video cache。视频使用 AV1；TorchCodec 不可用
-时会回退到固定的 PyAV 依赖。训练前检查一个真实文件：
-
-```bash
-python - <<'PY'
-from pathlib import Path
-import av
-
-path = next(Path("data/libero_mujoco3.3.2").rglob("*.mp4"))
-with av.open(str(path)) as container:
-    frame = next(container.decode(video=0))
-print(path, frame.width, frame.height)
-PY
-```
-
-数据和对应许可证不随本仓库分发。
+MP4 文件使用 AV1；TorchCodec 不可用时使用 PyAV 解码。
 
 ### RoboTwin
 
-下载固定的 RoboTwin 预处理数据 snapshot。八个分片解压前约占 84 GB：
+下载预处理后的 RoboTwin 数据集。八个分片解压前约占 84 GB：
 
 ```bash
 hf download yuanty/robotwin2.0-fastwam \
@@ -206,7 +187,6 @@ hf download yuanty/robotwin2.0-fastwam \
   robotwin2.0.tar.gz.part-04 robotwin2.0.tar.gz.part-05 \
   robotwin2.0.tar.gz.part-06 robotwin2.0.tar.gz.part-07 \
   --repo-type dataset \
-  --revision aac262c35d02cc71b2f6ef670bd65fd9f2bb2547 \
   --local-dir data/downloads/robotwin2.0
 
 mkdir -p data/robotwin2.0
@@ -216,8 +196,7 @@ cat data/downloads/robotwin2.0/robotwin2.0.tar.gz.part-* | \
 ```
 
 解压后的目录是 `data/robotwin2.0/robotwin2.0/`，与
-[`configs/data/robotwin.yaml`](./configs/data/robotwin.yaml) 一致。固定 snapshot 按配置划分后
-产生 6,011,575 个 training samples。
+[`configs/data/robotwin.yaml`](./configs/data/robotwin.yaml) 一致。
 
 ## 训练
 
@@ -261,19 +240,14 @@ bash scripts/train_zero2.sh "$N" \
 
 ## Benchmark evaluation
 
-Evaluation 结构与 FastWAM 官方保持同级：每个 benchmark 都有单 task worker 和多 GPU
-manager。这里替换为 RIFT model/task config、checkpoint schema 和两/三相机输入。
-Simulator 作为外部依赖安装，不 vendoring 到本仓库。
+LIBERO 和 RoboTwin 使用独立的评估入口。
 
 ### LIBERO
 
-在 RIFT 环境中安装 [官方 LIBERO](https://github.com/Lifelong-Robot-Learning/LIBERO)
-和 MuJoCo 3.3.2。Evaluation path 已用 LIBERO commit
-`8f1084e3132a39270c3a13ebe37270a43ece2a01` 实测：
+安装 [官方 LIBERO](https://github.com/Lifelong-Robot-Learning/LIBERO) 和 MuJoCo 3.3.2：
 
 ```bash
 git clone https://github.com/Lifelong-Robot-Learning/LIBERO.git /path/to/LIBERO
-git -C /path/to/LIBERO checkout 8f1084e3132a39270c3a13ebe37270a43ece2a01
 pip install -e /path/to/LIBERO
 pip install mujoco==3.3.2
 ```
@@ -291,6 +265,21 @@ python experiments/libero/run_libero_manager.py \
 结果写入 `evaluate_results/libero/`，包含 per-task JSON、`summary.json`、
 `summary.csv` 和 `task_success_rates.csv`。
 
+### LIBERO-Plus
+
+安装 [LIBERO-Plus](https://github.com/sylvestf/LIBERO-plus)，然后运行：
+
+```bash
+LIBERO_PLUS_ROOT=/path/to/LIBERO-plus \
+  bash scripts/run_libero_plus.sh \
+  ./checkpoints/rift/rift_step021700.pt \
+  ./checkpoints/rift/dataset_stats.json \
+  ./evaluate_results/libero_plus
+```
+
+脚本对每个 task 执行一次 rollout，并从已完成的 task receipt 继续运行。
+通过 `GPU_IDS` 和 `WORKERS_PER_GPU` 设置并行度。
+
 ### RoboTwin
 
 单独安装 [RoboTwin](https://github.com/RoboTwin-Platform/RoboTwin) 及其 simulator assets 和
@@ -299,8 +288,6 @@ task configs，然后指向该 checkout。Adapter 会在运行时链接到外部
 
 ```bash
 git clone https://github.com/RoboTwin-Platform/RoboTwin.git /path/to/RoboTwin
-git -C /path/to/RoboTwin checkout bf44be51cf5717a5595ce59447f2cf5263d2aa95
-# 在该 revision 上按 RoboTwin 官方说明完成环境和 assets 安装。
 export ROBOTWIN_ROOT=/path/to/RoboTwin
 python experiments/robotwin/run_robotwin_manager.py \
   task=robotwin_rift_3cam_384_1e-4 \
