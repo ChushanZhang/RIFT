@@ -1,8 +1,10 @@
 from __future__ import annotations
 
+import importlib
 import inspect
 import json
 from pathlib import Path
+import sys
 from types import SimpleNamespace
 import tempfile
 import unittest
@@ -13,6 +15,7 @@ from experiments.libero.libero_plus_catalog import (
     CATEGORY_COUNTS,
     SUITE_COUNTS,
     TOTAL_TASKS,
+    bootstrap_libero_plus,
     canonical_sha256,
     resolve_bddl_path,
     resolve_init_path,
@@ -22,6 +25,38 @@ from experiments.libero.summarize_libero_plus import summarize
 
 
 class LiberoPlusHarnessTest(unittest.TestCase):
+    def test_bootstrap_libero_plus_uses_nested_checkout_package(self) -> None:
+        saved_modules = {
+            name: module
+            for name, module in list(sys.modules.items())
+            if name == "libero" or name.startswith("libero.")
+        }
+        original_path = sys.path[:]
+        try:
+            for name in saved_modules:
+                sys.modules.pop(name, None)
+            with tempfile.TemporaryDirectory() as directory:
+                checkout = Path(directory) / "LIBERO-plus"
+                package_init = checkout / "libero/libero/__init__.py"
+                package_init.parent.mkdir(parents=True)
+                package_init.write_text("", encoding="utf-8")
+
+                sys.path.insert(0, str(checkout))
+                namespace = importlib.import_module("libero")
+                self.assertIsNone(namespace.__file__)
+
+                self.assertEqual(bootstrap_libero_plus(checkout), checkout.resolve())
+                package = importlib.import_module("libero.libero")
+                self.assertTrue(
+                    Path(package.__file__).resolve().is_relative_to(checkout.resolve())
+                )
+        finally:
+            sys.path[:] = original_path
+            for name in list(sys.modules):
+                if name == "libero" or name.startswith("libero."):
+                    sys.modules.pop(name, None)
+            sys.modules.update(saved_modules)
+
     def test_resource_resolution_matches_libero_plus(self) -> None:
         root = Path("/tmp/libero-plus-test")
         task = SimpleNamespace(

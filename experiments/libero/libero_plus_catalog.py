@@ -88,7 +88,7 @@ def git_revision(repo: Path | str) -> str | None:
 
 def bootstrap_libero_plus(root: Path | str) -> Path:
     plus_root = Path(root).expanduser().resolve()
-    package_init = plus_root / "libero" / "__init__.py"
+    package_init = plus_root / "libero" / "libero" / "__init__.py"
     if not package_init.is_file():
         raise FileNotFoundError(
             f"LIBERO-Plus package not found below {plus_root}; expected {package_init}."
@@ -96,10 +96,23 @@ def bootstrap_libero_plus(root: Path | str) -> Path:
 
     imported = sys.modules.get("libero")
     if imported is not None:
-        imported_file = Path(str(imported.__file__)).resolve()
-        if not imported_file.is_relative_to(plus_root):
+        imported_name = getattr(imported, "__file__", None)
+        if imported_name is not None and not Path(imported_name).resolve().is_relative_to(
+            plus_root
+        ):
             raise RuntimeError(
-                f"libero is already imported from {imported_file}, not {plus_root}."
+                f"libero is already imported from {imported_name}, not {plus_root}."
+            )
+
+    imported_package = sys.modules.get("libero.libero")
+    if imported_package is not None:
+        imported_name = getattr(imported_package, "__file__", None)
+        if imported_name is None or not Path(imported_name).resolve().is_relative_to(
+            plus_root
+        ):
+            raise RuntimeError(
+                f"libero.libero is already imported from {imported_name}, "
+                f"not {plus_root}."
             )
 
     root_text = str(plus_root)
@@ -107,8 +120,11 @@ def bootstrap_libero_plus(root: Path | str) -> Path:
         sys.path.remove(root_text)
     sys.path.insert(0, root_text)
     importlib.invalidate_caches()
-    libero = importlib.import_module("libero")
-    imported_file = Path(str(libero.__file__)).resolve()
+    libero = importlib.import_module("libero.libero")
+    imported_name = getattr(libero, "__file__", None)
+    if imported_name is None:
+        raise RuntimeError("failed to bind LIBERO-Plus; libero.libero has no __file__")
+    imported_file = Path(imported_name).resolve()
     if not imported_file.is_relative_to(plus_root):
         raise RuntimeError(f"failed to bind LIBERO-Plus; imported {imported_file}")
     return plus_root

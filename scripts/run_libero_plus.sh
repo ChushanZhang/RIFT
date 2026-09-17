@@ -28,7 +28,7 @@ catalog=${LIBERO_PLUS_CATALOG:-"$output_dir/task_catalog.json"}
 
 [[ -s "$checkpoint" ]] || { echo "missing checkpoint: $checkpoint" >&2; exit 2; }
 [[ -s "$dataset_stats" ]] || { echo "missing dataset stats: $dataset_stats" >&2; exit 2; }
-[[ -d "$libero_plus_root/libero" ]] || { echo "invalid LIBERO_PLUS_ROOT: $libero_plus_root" >&2; exit 2; }
+[[ -f "$libero_plus_root/libero/libero/__init__.py" ]] || { echo "invalid LIBERO_PLUS_ROOT: $libero_plus_root" >&2; exit 2; }
 [[ "$workers_per_gpu" =~ ^[1-9][0-9]*$ ]] || { echo "WORKERS_PER_GPU must be positive" >&2; exit 2; }
 if [[ -n "$global_task_ids" && ! "$global_task_ids" =~ ^[0-9]+(,[0-9]+)*$ ]]; then
   echo "GLOBAL_TASK_IDS must be comma-separated non-negative integers" >&2
