@@ -1,0 +1,78 @@
+train:
+  _target_: rift.datasets.lerobot.robot_video_dataset.RobotVideoDataset
+  # Canonical views expose the Galaxea named fields and three camera aliases.
+  # Both grippers use millimetre stroke (0 closed, 100 fully open); joints use radians.
+  dataset_dirs:
+    - ${oc.env:ROBOCOIN_TRAIN_ROOT,/cfsdata/chushan/RoboCOIN-downloads/training-views/galaxea_mm_v1}/Galaxea_R1_Lite_classify_object_four
+    - ${oc.env:ROBOCOIN_TRAIN_ROOT,/cfsdata/chushan/RoboCOIN-downloads/training-views/galaxea_mm_v1}/Galaxea_R1_Lite_mix_red_yellow_large_test_tube
+    - ${oc.env:ROBOCOIN_TRAIN_ROOT,/cfsdata/chushan/RoboCOIN-downloads/training-views/galaxea_mm_v1}/R1_Lite_stack_baskets
+  expected_total_episodes:
+    Galaxea_R1_Lite_classify_object_four: 191
+    Galaxea_R1_Lite_mix_red_yellow_large_test_tube: 50
+    R1_Lite_stack_baskets: 101
+  exclude_episodes: null
+
+  shape_meta:
+    images:
+      - {key: head_rgb, raw_shape: [3, 224, 224], shape: [3, 224, 224]}
+      - {key: left_wrist_rgb, raw_shape: [3, 224, 224], shape: [3, 224, 224]}
+      - {key: right_wrist_rgb, raw_shape: [3, 224, 224], shape: [3, 224, 224]}
+    action:
+      - {key: left_arm, raw_shape: 6, shape: 6}
+      - {key: left_gripper, raw_shape: 1, shape: 1}
+      - {key: right_arm, raw_shape: 6, shape: 6}
+      - {key: right_gripper, raw_shape: 1, shape: 1}
+    state:
+      - {key: left_arm, raw_shape: 6, shape: 6}
+      - {key: left_gripper, raw_shape: 1, shape: 1}
+      - {key: right_arm, raw_shape: 6, shape: 6}
+      - {key: right_gripper, raw_shape: 1, shape: 1}
+
+  num_frames: 33
+  global_sample_stride: 1
+  action_video_freq_ratio: 4
+  sample_video_before_transforms: true
+  # Set the precompute run directory to bypass decoding and read indexed latents.
+  vae_cache_index_dir: null
+  vae_cache_dir: ${oc.select:vae_cache_dir,null}
+  # Match the precomputed pixels: head 256x320 above two 128x160 wrist tiles.
+  video_size: [384, 320]
+  camera_key: null
+  val_set_proportion: 0.0
+  is_training_set: true
+  pretrained_norm_stats: ${oc.env:ROBOCOIN_NORM_STATS,/cfsdata/chushan/RoboCOIN-downloads/stat-norm/robocoin_multitask_mm/dataset_stats.json}
+  skip_padding_as_possible: false
+  concat_multi_camera: robotwin
+
+  processor:
+    _target_: rift.datasets.lerobot.processors.rift_processor.RIFTProcessor
+    shape_meta: ${data.train.shape_meta}
+    num_obs_steps: ${data.train.num_frames}
+    num_output_cameras: 3
+    action_output_dim: 14
+    proprio_output_dim: 14
+    action_state_transforms:
+      - _target_: rift.datasets.lerobot.transforms.relative_joint.RelativeJointTransform
+        keys: [left_arm, right_arm]
+    use_stepwise_action_norm: true
+    norm_default_mode: z-score
+    norm_exception_mode:
+      action:
+        left_gripper: 0/100
+        right_gripper: 0/100
+    action_state_merger:
+      _target_: rift.datasets.lerobot.transforms.action_state_merger.ConcatLeftAlign
+    train_transforms:
+      - _target_: rift.datasets.lerobot.transforms.image.ToTensor
+      - _target_: torchvision.transforms.Resize
+        size: [224, 224]
+    val_transforms:
+      - _target_: rift.datasets.lerobot.transforms.image.ToTensor
+      - _target_: torchvision.transforms.Resize
+        size: [224, 224]
+    drop_high_level_prob: 1.0
+    use_zh_instruction: false
+
+  text_embedding_cache_dir: ${oc.env:ROBOCOIN_TEXT_CACHE,/cfsdata/chushan/RoboCOIN-downloads/t5-cache}
+  context_len: 128
+  text_memory_cache_size: 128

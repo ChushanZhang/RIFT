@@ -1,0 +1,32 @@
+# @package _global_
+
+defaults:
+  - override /data: robotwin
+  - override /model: rift
+  - _self_
+
+batch_size: 16
+num_workers: 6
+
+model:
+  # Three cameras are composed at 384x320. The Wan VAE and 2x2 DiT patching
+  # produce 120 tokens per latent frame; latent_t=3 predicts two frames.
+  anticip_future_tokens: 240
+  anticip_latent_t: 3
+  anticip_anneal_total_steps: 46966
+  mot_checkpoint_mixed_attn: true
+
+lr_scheduler_type: cosine
+learning_rate: 1.0e-4
+num_epochs: 1
+max_steps: 46966
+log_every: 10
+save_every: 2000
+
+gradient_accumulation_steps: 1
+weight_decay: 1.0e-2
+resume: null
+
+wandb:
+  project: rift
+  name: robotwin_rift_3cam_384_1e-4
