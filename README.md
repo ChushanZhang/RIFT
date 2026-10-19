@@ -176,27 +176,22 @@ bash scripts/train_zero2.sh 8 \
 
 ### ⚡ Speed up training (optional)
 
-The upstream recipe reports about 30% faster training with its optional execution
-settings, depending on the configuration. The local experiment below reports its
-own measurements separately.
+The following settings can be passed as Hydra overrides to any training task
+above. Their defaults preserve the original training execution.
 
-Use ZeRO-1 with MoT compilation, fused training paths, and batched online VAE
-encoding with CUDA Graphs. ZeRO-1 requires more VRAM than ZeRO-2; these options
-work with any of the training tasks above:
+| Setting | Default | Effect when enabled |
+| --- | --- | --- |
+| `model.compile_training_denoise` | `false` | Compile MoT training layers while retaining gradient checkpointing. |
+| `model.fuse_training_paths` | `false` | Batch the two training paths together when their video grids match. |
+| `fused_adamw` | `false` | Fuse AdamW updates on CUDA; CPU keeps the standard optimizer. |
+| `model.video_future_head_only` | `false` | Apply the native video output head only to supervised future frames; unsupported or custom heads retain the full-head path. |
+| `model.compile_future_head` | `false` | Compile the future flow-matching decoder during gradient-enabled training. |
+| `model.vae_encode_mode` | `sequential` | Use `batched` for batched online VAE encoding, or `cudagraphs` to also enable CUDA Graphs. |
+| `model.vae_encode_batch_size` | `null` | Limit the online VAE batch to a positive number to reduce peak memory; `null` uses the full batch. |
 
-```bash
-bash scripts/train_zero1.sh "$N" task=libero_rift_2cam224_1e-4 \
-  model.compile_training_denoise=true \
-  model.fuse_training_paths=true \
-  model.vae_encode_mode=cudagraphs
-```
-
-[Precompute VAE latents (RoboCOIN guide)](docs/robocoin_precompute.md#generate-and-verify-vae-latents)
-to read cached latents during training and bypass online VAE encoding.
-
-This local branch also provides a combined training experiment with fused AdamW,
-a video output head that computes only supervised future frames, and compilation
-of the future flow-matching decoder. Enable the complete combination with:
+Enable the complete training combination with the command below. ZeRO-1 requires
+more VRAM than ZeRO-2. Compilation adds startup or recompilation time, and CUDA
+Graphs require a CUDA device.
 
 ```bash
 bash scripts/train_zero1.sh "$N" task=libero_rift_2cam224_1e-4 \
@@ -205,20 +200,32 @@ bash scripts/train_zero1.sh "$N" task=libero_rift_2cam224_1e-4 \
   fused_adamw=true model.vae_encode_mode=cudagraphs
 ```
 
-The new flags default to `false`, retaining the original configuration for
-comparison. The [local RTX 3090 experiment](docs/RIFT_TRAINING_COMBO_20261019.md)
+[Precompute VAE latents (RoboCOIN guide)](docs/robocoin_precompute.md#generate-and-verify-vae-latents)
+to read cached latents during training and bypass online VAE encoding. The two
+VAE execution settings above apply only when encoding online.
+
+The [RTX 3090 combination experiment](docs/RIFT_TRAINING_COMBO_20261019.md)
 documents the reduced native RIFT fixture, numerical checks, and paired full-step
 measurements: the final combination reduced step time by 22.68–22.76% against
 original execution and 6.43–6.50% against upstream compilation plus path fusion.
 These results use a 475M-parameter synthetic fixture; cached-latent timings
 exclude online VAE encoding and do not establish full-5B throughput or task quality.
 
-Action inference also enables a final video-layer shortcut by default: retain
+### ⚡ Speed up action inference (optional)
+
+Action inference enables a final video-layer shortcut by default: retain
 the K/V read by the action expert and omit the unused visual query and output
 updates. It applies only to no-grad evaluation prefill; training and joint video
 generation retain their full paths. See the [full-size RTX 3090 inference test](docs/RIFT_INFERENCE_VIDEO_TAIL_20261019.md)
-for exact-output checks, measured latency, and scope. Set
-`model.mot.optimize_video_prefill = False` for the original prefill control.
+for exact-output checks, measured latency, and scope.
+
+`optimize_video_prefill` is a Python attribute, not a Hydra configuration option.
+After constructing the model, set it to `False` to use the original full prefill,
+or `True` to re-enable the shortcut:
+
+```python
+model.mot.optimize_video_prefill = False  # Default: True
+```
 
 ## Benchmark evaluation
 

@@ -170,20 +170,49 @@ bash scripts/train_zero2.sh 8 \
 
 ### ⚡ 训练加速（可选）
 
-启用本节全部加速选项后，训练速度预计可提升约 30%，具体取决于训练配置。
+以下设置可作为 Hydra 参数传入上述任一训练 task；默认值保留原有训练执行方式。
 
-使用 ZeRO-1，开启 MoT 编译、训练路径融合，以及 VAE 在线批量编码与 CUDA Graph。
-ZeRO-1 比 ZeRO-2 需要更多显存；这些选项可用于上述任一训练 task：
+| 设置 | 默认值 | 启用后的作用 |
+| --- | --- | --- |
+| `model.compile_training_denoise` | `false` | 编译 MoT 训练层，保留梯度检查点。 |
+| `model.fuse_training_paths` | `false` | 两条训练路径的视频网格相同时，将它们合并到 batch 维度执行。 |
+| `fused_adamw` | `false` | 在 CUDA 上融合 AdamW 更新；CPU 继续使用常规优化器。 |
+| `model.video_future_head_only` | `false` | 原生视频输出头只计算受监督的未来帧；不支持的配置或自定义输出头保留完整路径。 |
+| `model.compile_future_head` | `false` | 在启用梯度的训练过程中编译未来帧流匹配解码器。 |
+| `model.vae_encode_mode` | `sequential` | `batched` 启用在线 VAE 批量编码；`cudagraphs` 额外启用 CUDA Graph。 |
+| `model.vae_encode_batch_size` | `null` | 正整数限制在线 VAE 编码的批量大小，以降低峰值显存；`null` 使用整个 batch。 |
+
+以下命令开启完整训练组合。ZeRO-1 比 ZeRO-2 需要更多显存；编译会增加启动或重新编译耗时，
+CUDA Graph 需要 CUDA 设备。
 
 ```bash
 bash scripts/train_zero1.sh "$N" task=libero_rift_2cam224_1e-4 \
-  model.compile_training_denoise=true \
-  model.fuse_training_paths=true \
-  model.vae_encode_mode=cudagraphs
+  model.compile_training_denoise=true model.fuse_training_paths=true \
+  model.video_future_head_only=true model.compile_future_head=true \
+  fused_adamw=true model.vae_encode_mode=cudagraphs
 ```
 
 [预计算 VAE latents（RoboCOIN 指南）](docs/robocoin_precompute.md#generate-and-verify-vae-latents)
-后，训练时可直接读取缓存的 latents，跳过在线 VAE 编码。
+后，训练时可直接读取缓存的 latents，跳过在线 VAE 编码。上表两个 VAE 执行设置只影响在线编码。
+
+[RTX 3090 组合实验](docs/RIFT_TRAINING_COMBO_20261019.md)记录了缩小后的原生 RIFT 模型、
+数值验证和完整计算步的配对测速：组合方案相对原始执行降低步耗时 22.68–22.76%，
+相对已有的 MoT 编译与路径融合降低 6.43–6.50%。这些结果来自 475M 参数的合成测试模型；
+缓存 latent 的计时不含在线 VAE 编码，不能据此推断完整 5B 模型吞吐或任务成功率。
+
+### ⚡ 动作推理加速（可选）
+
+动作推理默认跳过最后一个视频层中未被使用的视觉查询与输出更新，保留动作分支需要的 K/V。
+该优化只用于关闭梯度的评估预填充；训练和视频联合生成保留完整路径。
+[完整模型的 RTX 3090 推理实验](docs/RIFT_INFERENCE_VIDEO_TAIL_20261019.md)提供了输出精确一致检查、
+延迟测量和测试范围。
+
+`optimize_video_prefill` 是 Python 属性，不是 Hydra 配置项。构建模型后设为 `False` 可使用
+原始完整预填充，设为 `True` 可重新启用：
+
+```python
+model.mot.optimize_video_prefill = False  # 默认值：True
+```
 
 ## Benchmark evaluation
 
