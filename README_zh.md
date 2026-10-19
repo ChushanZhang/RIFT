@@ -180,7 +180,7 @@ bash scripts/train_zero2.sh 8 \
 | `model.video_future_head_only` | `false` | 原生视频输出头只计算受监督的未来帧；不支持的配置或自定义输出头保留完整路径。 |
 | `model.compile_future_head` | `false` | 在启用梯度的训练过程中编译未来帧流匹配解码器。 |
 | `model.vae_encode_mode` | `sequential` | `batched` 启用在线 VAE 批量编码；`cudagraphs` 额外启用 CUDA Graph。 |
-| `model.vae_encode_batch_size` | `null` | 正整数限制在线 VAE 编码的批量大小，以降低峰值显存；`null` 使用整个 batch。 |
+| `model.vae_encode_batch_size` | `null` | 在 `batched` / `cudagraphs` 模式下，正整数限制在线 VAE 编码的批量大小，以降低峰值显存；`null` 使用整个 batch。`sequential` 模式忽略此项。 |
 
 以下命令开启完整训练组合。ZeRO-1 比 ZeRO-2 需要更多显存；编译会增加启动或重新编译耗时，
 CUDA Graph 需要 CUDA 设备。

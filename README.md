@@ -187,7 +187,7 @@ above. Their defaults preserve the original training execution.
 | `model.video_future_head_only` | `false` | Apply the native video output head only to supervised future frames; unsupported or custom heads retain the full-head path. |
 | `model.compile_future_head` | `false` | Compile the future flow-matching decoder during gradient-enabled training. |
 | `model.vae_encode_mode` | `sequential` | Use `batched` for batched online VAE encoding, or `cudagraphs` to also enable CUDA Graphs. |
-| `model.vae_encode_batch_size` | `null` | Limit the online VAE batch to a positive number to reduce peak memory; `null` uses the full batch. |
+| `model.vae_encode_batch_size` | `null` | In `batched` / `cudagraphs` mode, limit the online VAE batch to a positive number to reduce peak memory; `null` uses the full batch. Ignored in `sequential` mode. |
 
 Enable the complete training combination with the command below. ZeRO-1 requires
 more VRAM than ZeRO-2. Compilation adds startup or recompilation time, and CUDA
