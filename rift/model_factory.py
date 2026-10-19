@@ -62,6 +62,8 @@ def create_rift(
     fuse_training_paths: bool = False,
     train_probe_head: bool = True,
     compile_training_denoise: bool = False,
+    video_future_head_only: bool = False,
+    compile_future_head: bool = False,
     vae_encode_mode: str = "sequential",
     vae_encode_batch_size: Optional[int] = None,
 ) -> RIFTModel:
@@ -134,6 +136,8 @@ def create_rift(
         ),
         fuse_training_paths=bool(fuse_training_paths),
         train_probe_head=bool(train_probe_head),
+        video_future_head_only=bool(video_future_head_only),
+        compile_future_head=bool(compile_future_head),
     )
     return model
 

@@ -1,0 +1,62 @@
+{
+  "created_utc": "2026-10-19T00:20:53.106843+00:00",
+  "torch_version": "2.7.1+cu128",
+  "settings": {
+    "video_hidden": 1536,
+    "action_hidden": 512,
+    "video_ffn": 7168,
+    "action_ffn": 2048,
+    "layers": 9,
+    "heads": 12,
+    "head_dim": 128,
+    "text_dim": 256,
+    "context_length": 128,
+    "seed": 2731,
+    "batch_size": 4,
+    "device": "cuda:0",
+    "references": [
+      "upstream_accelerated"
+    ],
+    "probabilities": [
+      0.3
+    ],
+    "warmup": 2,
+    "repeats": 4,
+    "parity_steps": 1,
+    "output": "docs/benchmarks/rift-training-combo-20261019/pilot.json"
+  },
+  "upstream_commit": "cc5fce8",
+  "status": "failed",
+  "cases": [],
+  "scope": "Reduced native RIFT with random interpolated weights, BF16, single-rank ZeRO-1, resident synthetic indexed latents; no online VAE or data loading.",
+  "timing": "Full warmed forward/backward/clipping/optimizer/gradient clearing; native metric sync retained; alternating paired order; initialization, compilation and parity checks excluded.",
+  "comparison": "Original default model execution or upstream MoT compile+path fusion versus the complete combination; both references use the same fixed ZeRO-1 runtime.",
+  "numerical_scope": "BF16 rounding tolerance checks are not bitwise equivalence or a pretrained task-quality evaluation.",
+  "device_name": "NVIDIA GeForce RTX 3090",
+  "deepspeed_version": "0.18.5",
+  "zero_config": {
+    "train_batch_size": 4,
+    "train_micro_batch_size_per_gpu": 4,
+    "gradient_accumulation_steps": 1,
+    "zero_optimization": {
+      "stage": 1,
+      "offload_optimizer": {
+        "device": "none"
+      },
+      "offload_param": {
+        "device": "none"
+      },
+      "overlap_comm": false,
+      "contiguous_gradients": false,
+      "reduce_bucket_size": 200000000.0,
+      "allgather_bucket_size": 200000000.0
+    },
+    "gradient_clipping": 1.0,
+    "steps_per_print": 2147483647,
+    "bf16": {
+      "enabled": true
+    },
+    "zero_allow_untested_optimizer": true
+  },
+  "reason": "RuntimeError: CPU/CUDA random-number consumption differs"
+}

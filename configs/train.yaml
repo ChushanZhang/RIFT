@@ -28,6 +28,8 @@ mixed_precision: "bf16" # one of: [no, fp16, bf16]
 seed: 42
 max_grad_norm: 1.0
 weight_decay: 0.0
+# CUDA-only fused AdamW; leave false for the original optimizer execution.
+fused_adamw: false
 resume: null
 
 # wandb

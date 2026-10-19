@@ -29,6 +29,9 @@ redirect_common_files: true
 mot_checkpoint_mixed_attn: true
 # Compile one shared MoT layer with Inductor; retain gradient checkpointing.
 compile_training_denoise: false
+# Optional output-head execution optimizations; native losses and weights stay unchanged.
+video_future_head_only: false
+compile_future_head: false
 # Online encoding only; exact cached/precomputed latents keep their original path.
 vae_encode_mode: sequential  # sequential | batched | cudagraphs
 vae_encode_batch_size: null  # null encodes the full batch; a positive limit saves memory

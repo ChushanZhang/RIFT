@@ -1,0 +1,401 @@
+{
+  "created_utc": "2026-10-19T00:30:08.899459+00:00",
+  "torch_version": "2.7.1+cu128",
+  "settings": {
+    "video_hidden": 1536,
+    "action_hidden": 512,
+    "video_ffn": 7168,
+    "action_ffn": 2048,
+    "layers": 9,
+    "heads": 12,
+    "head_dim": 128,
+    "text_dim": 256,
+    "context_length": 128,
+    "seed": 2731,
+    "batch_size": 4,
+    "device": "cuda:0",
+    "references": [
+      "upstream_accelerated"
+    ],
+    "probabilities": [
+      0.3
+    ],
+    "warmup": 2,
+    "repeats": 4,
+    "parity_steps": 1,
+    "debug_cuda": false,
+    "output": "docs/benchmarks/rift-training-combo-20261019/pilot_cache_fixed.json"
+  },
+  "upstream_commit": "cc5fce8",
+  "status": "complete",
+  "cases": [
+    {
+      "reference": "upstream_accelerated",
+      "probability": 0.3,
+      "fixture": {
+        "synthetic": true,
+        "pretrained_weights_loaded": false,
+        "initialization": "native_random_video_interpolated_action_backbone_with_alpha",
+        "configuration": {
+          "video_hidden": 1536,
+          "action_hidden": 512,
+          "video_ffn": 7168,
+          "action_ffn": 2048,
+          "layers": 9,
+          "heads": 12,
+          "head_dim": 128,
+          "text_dim": 256,
+          "context_length": 128,
+          "seed": 2731,
+          "batch_size": 4
+        },
+        "video_latent_shape": [
+          4,
+          48,
+          3,
+          14,
+          28
+        ],
+        "action_shape": [
+          4,
+          32,
+          7
+        ],
+        "future_tokens": 196,
+        "fm_width": 512,
+        "fm_blocks": 2,
+        "gradient_checkpointing": true,
+        "probe_head_enabled": true,
+        "curriculum_step": 21700,
+        "vae_encoding_included": false,
+        "data_loading_included": false,
+        "trainable_parameters": 474971975,
+        "component_parameters": {
+          "video": 388675776,
+          "action": 78076935,
+          "anticipation_including_fm": 8216960,
+          "proprio": 2304
+        },
+        "initialization_counts": {
+          "copied_backbone_tensors": 90,
+          "resized_backbone_tensors": 163
+        }
+      },
+      "precheck": {
+        "losses": [
+          4.013303756713867,
+          4.013302803039551
+        ],
+        "gradients": {
+          "video_expert": {
+            "max_abs": 3.0517578125e-05,
+            "relative_l2": 0.0036948400522233606
+          },
+          "video_output_head": {
+            "max_abs": 1.52587890625e-05,
+            "relative_l2": 0.0019282508174547595
+          },
+          "action_expert": {
+            "max_abs": 5.960464477539063e-08,
+            "relative_l2": 6.52777522220031e-08
+          },
+          "action_output_head": {
+            "max_abs": 0.0,
+            "relative_l2": 0.0
+          },
+          "anticipation_tokens": {
+            "max_abs": 1.430511474609375e-06,
+            "relative_l2": 0.005098818789356081
+          },
+          "diagnostic_probe": {
+            "max_abs": 0.0,
+            "relative_l2": 0.0
+          },
+          "future_fm_head": {
+            "max_abs": 3.814697265625e-06,
+            "relative_l2": 0.005930241996397012
+          },
+          "proprio_encoder": {
+            "max_abs": 1.52587890625e-05,
+            "relative_l2": 0.0032542336796884653
+          }
+        },
+        "cpu_and_cuda_rng_equal": true,
+        "loss_rtol": 0.001,
+        "loss_atol": 0.0001,
+        "relative_l2_limit": 0.02
+      },
+      "update_precheck": {
+        "steps": [
+          {
+            "update": 1,
+            "losses": [
+              4.173346519470215,
+              4.173344612121582
+            ],
+            "cpu_and_cuda_rng_equal": true,
+            "optimizer": {
+              "master_parameter": {
+                "max_abs": 0.0001975633203983307,
+                "relative_l2": 9.185742788340682e-05
+              },
+              "step": {
+                "max_abs": 0.0,
+                "relative_l2": 0.0
+              },
+              "exp_avg": {
+                "max_abs": 1.8735008779913187e-06,
+                "relative_l2": 0.0007148297271004772
+              },
+              "exp_avg_sq": {
+                "max_abs": 5.841684469487518e-09,
+                "relative_l2": 1.3113679517183529e-05
+              }
+            },
+            "model": {
+              "video_expert": {
+                "max_abs": 0.000244140625,
+                "relative_l2": 0.00019992979024548697
+              },
+              "video_output_head": {
+                "max_abs": 0.000244140625,
+                "relative_l2": 0.00023472047735199832
+              },
+              "action_expert": {
+                "max_abs": 0.000244140625,
+                "relative_l2": 3.584004024701183e-05
+              },
+              "action_output_head": {
+                "max_abs": 0.0,
+                "relative_l2": 0.0
+              },
+              "anticipation_tokens": {
+                "max_abs": 0.000244140625,
+                "relative_l2": 0.00033364276816463427
+              },
+              "diagnostic_probe": {
+                "max_abs": 0.0,
+                "relative_l2": 0.0
+              },
+              "future_fm_head": {
+                "max_abs": 0.000244140625,
+                "relative_l2": 0.00023138085203331516
+              },
+              "proprio_encoder": {
+                "max_abs": 0.0,
+                "relative_l2": 0.0
+              }
+            }
+          }
+        ],
+        "relative_l2_limit": 0.02,
+        "loss_rtol": 0.003,
+        "loss_atol": 0.0002
+      },
+      "optimizer": [
+        {
+          "fused": [
+            null
+          ],
+          "foreach": [
+            null
+          ],
+          "partition_shapes": [
+            [
+              474971976
+            ]
+          ],
+          "partition_dtypes": [
+            "torch.float32"
+          ]
+        },
+        {
+          "fused": [
+            true
+          ],
+          "foreach": [
+            null
+          ],
+          "partition_shapes": [
+            [
+              474971976
+            ]
+          ],
+          "partition_dtypes": [
+            "torch.float32"
+          ]
+        }
+      ],
+      "median_wall_ms": {
+        "reference": 249.9472390045412,
+        "combined": 233.1256124889478
+      },
+      "median_cuda_ms": {
+        "reference": 249.90723419189453,
+        "combined": 233.09056091308594
+      },
+      "paired_median_time_change_percent": -6.722139038766745,
+      "paired_median_time_change_95ci": [
+        -6.784120643764336,
+        -6.612981420040953
+      ],
+      "order_strata_median_percent": {
+        "0": -6.698551031902644,
+        "1": -6.722139038766745
+      },
+      "final_forward_losses": [
+        2.1384198665618896,
+        2.1384341716766357
+      ],
+      "optimizer_updates_per_variant": 9,
+      "final_curriculum_steps": [
+        21710,
+        21710
+      ],
+      "timed_phase_two_engine_peak_allocated_bytes": 17148435968,
+      "timed_phase_two_engine_peak_reserved_bytes": 18152947712,
+      "activity_before": {
+        "gpus": "NVIDIA GeForce RTX 3070, GPU-ab4ed20a-c3c1-b648-84d3-ca42cf3b352b, 39 %, 1488 MiB, 48, 690 MHz, 30.89 W\nNVIDIA GeForce RTX 3090, GPU-868c67e2-83b5-a202-2686-77c7402cec07, 99 %, 18123 MiB, 40, 1980 MHz, 336.31 W",
+        "returncode": 0,
+        "compute_processes": "952394, GPU-ab4ed20a-c3c1-b648-84d3-ca42cf3b352b, 82 MiB\n2324705, GPU-ab4ed20a-c3c1-b648-84d3-ca42cf3b352b, 117 MiB\n2326275, GPU-868c67e2-83b5-a202-2686-77c7402cec07, 18098 MiB",
+        "benchmark_pid": 2326275,
+        "loadavg": [
+          1.06689453125,
+          1.00537109375,
+          0.6865234375
+        ]
+      },
+      "activity_after": {
+        "gpus": "NVIDIA GeForce RTX 3070, GPU-ab4ed20a-c3c1-b648-84d3-ca42cf3b352b, 19 %, 1488 MiB, 49, 1080 MHz, 32.45 W\nNVIDIA GeForce RTX 3090, GPU-868c67e2-83b5-a202-2686-77c7402cec07, 74 %, 18123 MiB, 41, 1980 MHz, 332.38 W",
+        "returncode": 0,
+        "compute_processes": "952394, GPU-ab4ed20a-c3c1-b648-84d3-ca42cf3b352b, 82 MiB\n2324705, GPU-ab4ed20a-c3c1-b648-84d3-ca42cf3b352b, 117 MiB\n2326275, GPU-868c67e2-83b5-a202-2686-77c7402cec07, 18098 MiB",
+        "benchmark_pid": 2326275,
+        "loadavg": [
+          1.06689453125,
+          1.00537109375,
+          0.6865234375
+        ]
+      },
+      "raw_pairs": [
+        {
+          "pair": 0,
+          "order": [
+            0,
+            1
+          ],
+          "reference_wall_ms": 249.11182903451845,
+          "reference_cuda_ms": 249.0654754638672,
+          "combined_wall_ms": 232.21178201492876,
+          "combined_cuda_ms": 232.1815948486328
+        },
+        {
+          "pair": 1,
+          "order": [
+            1,
+            0
+          ],
+          "combined_wall_ms": 232.22691001137719,
+          "combined_cuda_ms": 232.20736694335938,
+          "reference_wall_ms": 248.99756599916145,
+          "reference_cuda_ms": 248.97433471679688
+        },
+        {
+          "pair": 2,
+          "order": [
+            0,
+            1
+          ],
+          "reference_wall_ms": 250.78264897456393,
+          "reference_cuda_ms": 250.74899291992188,
+          "combined_wall_ms": 234.19843899318948,
+          "combined_cuda_ms": 234.1570587158203
+        },
+        {
+          "pair": 3,
+          "order": [
+            1,
+            0
+          ],
+          "combined_wall_ms": 234.02431496651843,
+          "combined_cuda_ms": 233.9737548828125,
+          "reference_wall_ms": 250.85414201021194,
+          "reference_cuda_ms": 250.81356811523438
+        }
+      ],
+      "final_model_drift": {
+        "video_expert": {
+          "max_abs": 0.00048828125,
+          "relative_l2": 0.0005778596209151065
+        },
+        "video_output_head": {
+          "max_abs": 0.000244140625,
+          "relative_l2": 0.0006260592639972228
+        },
+        "action_expert": {
+          "max_abs": 0.0009765625,
+          "relative_l2": 0.00031398953185230203
+        },
+        "action_output_head": {
+          "max_abs": 0.000244140625,
+          "relative_l2": 0.0003292168820635106
+        },
+        "anticipation_tokens": {
+          "max_abs": 0.00048828125,
+          "relative_l2": 0.0007917634012085536
+        },
+        "diagnostic_probe": {
+          "max_abs": 0.0001220703125,
+          "relative_l2": 0.0006743142998782816
+        },
+        "future_fm_head": {
+          "max_abs": 0.00048828125,
+          "relative_l2": 0.0005165835849397694
+        },
+        "proprio_encoder": {
+          "max_abs": 0.00048828125,
+          "relative_l2": 5.5998887335545076e-05
+        }
+      }
+    }
+  ],
+  "scope": "Reduced native RIFT with random interpolated weights, BF16, single-rank ZeRO-1, resident synthetic indexed latents; no online VAE or data loading.",
+  "timing": "Full warmed forward/backward/clipping/optimizer/gradient clearing; native metric sync retained; alternating paired order; initialization, compilation and parity checks excluded.",
+  "comparison": "Original default model execution or upstream MoT compile+path fusion versus the complete combination; both references use the same fixed ZeRO-1 runtime.",
+  "optimizer_settings": {
+    "learning_rate": 0.0001,
+    "weight_decay": 0.01,
+    "betas": [
+      0.9,
+      0.95
+    ],
+    "clipping": 1.0,
+    "learning_rate_scheduler_included": false
+  },
+  "numerical_scope": "BF16 rounding tolerance checks are not bitwise equivalence or a pretrained task-quality evaluation.",
+  "device_name": "NVIDIA GeForce RTX 3090",
+  "deepspeed_version": "0.18.5",
+  "zero_config": {
+    "train_batch_size": 4,
+    "train_micro_batch_size_per_gpu": 4,
+    "gradient_accumulation_steps": 1,
+    "zero_optimization": {
+      "stage": 1,
+      "offload_optimizer": {
+        "device": "none"
+      },
+      "offload_param": {
+        "device": "none"
+      },
+      "overlap_comm": false,
+      "contiguous_gradients": false,
+      "reduce_bucket_size": 200000000.0,
+      "allgather_bucket_size": 200000000.0
+    },
+    "gradient_clipping": 1.0,
+    "steps_per_print": 2147483647,
+    "bf16": {
+      "enabled": true
+    },
+    "zero_allow_untested_optimizer": true
+  }
+}

@@ -176,8 +176,9 @@ bash scripts/train_zero2.sh 8 \
 
 ### ⚡ Speed up training (optional)
 
-Enabling all the optimizations in this section can speed up training by about 30%,
-depending on the training configuration.
+The upstream recipe reports about 30% faster training with its optional execution
+settings, depending on the configuration. The local experiment below reports its
+own measurements separately.
 
 Use ZeRO-1 with MoT compilation, fused training paths, and batched online VAE
 encoding with CUDA Graphs. ZeRO-1 requires more VRAM than ZeRO-2; these options
@@ -192,6 +193,25 @@ bash scripts/train_zero1.sh "$N" task=libero_rift_2cam224_1e-4 \
 
 [Precompute VAE latents (RoboCOIN guide)](docs/robocoin_precompute.md#generate-and-verify-vae-latents)
 to read cached latents during training and bypass online VAE encoding.
+
+This local branch also provides a combined training experiment with fused AdamW,
+a video output head that computes only supervised future frames, and compilation
+of the future flow-matching decoder. Enable the complete combination with:
+
+```bash
+bash scripts/train_zero1.sh "$N" task=libero_rift_2cam224_1e-4 \
+  model.compile_training_denoise=true model.fuse_training_paths=true \
+  model.video_future_head_only=true model.compile_future_head=true \
+  fused_adamw=true model.vae_encode_mode=cudagraphs
+```
+
+The new flags default to `false`, retaining the original configuration for
+comparison. The [local RTX 3090 experiment](docs/RIFT_TRAINING_COMBO_20261019.md)
+documents the reduced native RIFT fixture, numerical checks, and paired full-step
+measurements: the final combination reduced step time by 22.68–22.76% against
+original execution and 6.43–6.50% against upstream compilation plus path fusion.
+These results use a 475M-parameter synthetic fixture; cached-latent timings
+exclude online VAE encoding and do not establish full-5B throughput or task quality.
 
 ## Benchmark evaluation
 

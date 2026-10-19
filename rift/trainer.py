@@ -22,6 +22,15 @@ from .utils.vae_latent_cache import VaeCacheCollator, VaeLatentCache
 logger = get_logger(__name__)
 
 
+def make_training_optimizer(parameters, *, learning_rate, weight_decay, device,
+                            fused_adamw=False):
+    """Keep the original optimizer settings, optionally fusing CUDA updates."""
+    kwargs = dict(lr=learning_rate, weight_decay=weight_decay, betas=(0.9, 0.95))
+    if fused_adamw and torch.device(device).type == "cuda":
+        kwargs["fused"] = True
+    return torch.optim.AdamW(parameters, **kwargs)
+
+
 class Wan22Trainer:
     def __init__(self, model, train_dataset, *, cfg: DictConfig):
         self.model = model
@@ -82,11 +91,12 @@ class Wan22Trainer:
         proprio_encoder = getattr(self.model, "proprio_encoder", None)
         if proprio_encoder is not None:
             trainable_params.extend(list(proprio_encoder.parameters()))
-        self.optimizer = torch.optim.AdamW(
+        self.optimizer = make_training_optimizer(
             trainable_params,
-            lr=self.learning_rate,
+            learning_rate=self.learning_rate,
             weight_decay=self.weight_decay,
-            betas=(0.9, 0.95),
+            device=self.accelerator.device,
+            fused_adamw=bool(cfg.get("fused_adamw", False)),
         )
 
         self.train_loader = self._build_loader(self.train_dataset, worker_init_fn=worker_init_fn)
@@ -112,6 +122,7 @@ class Wan22Trainer:
         ensure_dir(self.state_dir)
 
         if (getattr(self.model, "compile_training_denoise", False)
+                or getattr(self.model, "compile_future_head", False)
                 or (getattr(self.model, "vae_encode_mode", "sequential") == "cudagraphs"
                     and not self.vae_cache_dir)):
             self._warmup_compiled_training()
@@ -144,11 +155,12 @@ class Wan22Trainer:
             )
 
     def _warmup_compiled_training(self):
-        """Warm enabled VAE/MoT paths before ZeRO without advancing training."""
+        """Warm enabled compiled paths before ZeRO without advancing training."""
         logger.info("Prewarming compiled training paths before DeepSpeed initialization.")
         start = time.perf_counter()
         model = self.model
-        compile_mot = getattr(model, "compile_training_denoise", False)
+        compile_network = (getattr(model, "compile_training_denoise", False)
+                           or getattr(model, "compile_future_head", False))
         curriculum_step = getattr(model, "_anticip_step", None)
         previous_cache = getattr(model, "_vae_latent_cache", None)
         python_rng, numpy_rng = random.getstate(), np.random.get_state()
@@ -173,9 +185,9 @@ class Wan22Trainer:
                         # a later call. Do both before the first training update.
                         model.build_inputs(sample)
                         model.build_inputs(sample)
-                    if compile_mot:
+                    if compile_network:
                         loss, _ = model.training_loss(sample)
-                if compile_mot:
+                if compile_network:
                     loss.backward()
                 if device.type == "cuda":
                     torch.cuda.synchronize(device)

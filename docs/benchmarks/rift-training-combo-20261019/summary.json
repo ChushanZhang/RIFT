@@ -1,0 +1,180 @@
+{
+  "status": "complete",
+  "source": "large3090.json",
+  "device": "NVIDIA GeForce RTX 3090",
+  "torch_version": "2.7.1+cu128",
+  "deepspeed_version": "0.18.5",
+  "trainable_parameters": 474971975,
+  "comparisons": [
+    {
+      "reference": "original",
+      "probability": 0.0,
+      "median_wall_ms": {
+        "reference": 304.43253050907515,
+        "combined": 235.46034601167776
+      },
+      "paired_median_time_change_percent": -22.680954620813367,
+      "paired_median_time_change_95ci": [
+        -22.75301665997082,
+        -22.57881751608496
+      ],
+      "order_strata_median_percent": {
+        "0": -22.685467550681043,
+        "1": -22.680954620813367
+      },
+      "final_forward_losses": [
+        3.649914264678955,
+        3.6513400077819824
+      ],
+      "faster_pairs": 60,
+      "pairs": 60
+    },
+    {
+      "reference": "original",
+      "probability": 0.3,
+      "median_wall_ms": {
+        "reference": 303.922737512039,
+        "combined": 234.9820435338188
+      },
+      "paired_median_time_change_percent": -22.758088554833538,
+      "paired_median_time_change_95ci": [
+        -22.832507749076125,
+        -22.618214446281335
+      ],
+      "order_strata_median_percent": {
+        "0": -22.64381539751633,
+        "1": -22.801162578069594
+      },
+      "final_forward_losses": [
+        2.443558692932129,
+        2.4432826042175293
+      ],
+      "faster_pairs": 60,
+      "pairs": 60
+    },
+    {
+      "reference": "upstream_accelerated",
+      "probability": 0.0,
+      "median_wall_ms": {
+        "reference": 251.1545694724191,
+        "combined": 234.6578544820659
+      },
+      "paired_median_time_change_percent": -6.501965657264908,
+      "paired_median_time_change_95ci": [
+        -6.561971821608859,
+        -6.418245128724715
+      ],
+      "order_strata_median_percent": {
+        "0": -6.50167330853984,
+        "1": -6.517667312292113
+      },
+      "final_forward_losses": [
+        3.652660608291626,
+        3.651052474975586
+      ],
+      "faster_pairs": 60,
+      "pairs": 60
+    },
+    {
+      "reference": "upstream_accelerated",
+      "probability": 0.3,
+      "median_wall_ms": {
+        "reference": 252.11344001581892,
+        "combined": 235.6163510121405
+      },
+      "paired_median_time_change_percent": -6.434744555425042,
+      "paired_median_time_change_95ci": [
+        -6.560699191678165,
+        -6.355753514477714
+      ],
+      "order_strata_median_percent": {
+        "0": -6.547307230389232,
+        "1": -6.3642906360949265
+      },
+      "final_forward_losses": [
+        2.4448444843292236,
+        2.443871259689331
+      ],
+      "faster_pairs": 60,
+      "pairs": 60
+    }
+  ],
+  "numerical_maxima": {
+    "initial_loss_relative_difference": {
+      "percent": 0.02844789361461375,
+      "reference": "original",
+      "probability": 0.3,
+      "component": null
+    },
+    "initial_component_gradient_relative_l2": {
+      "percent": 1.505729562410455,
+      "reference": "original",
+      "probability": 0.0,
+      "component": "anticipation_tokens"
+    },
+    "update_loss_relative_difference": {
+      "percent": 0.06613379840194611,
+      "reference": "original",
+      "probability": 0.0,
+      "component": null
+    },
+    "update_optimizer_master_parameter": {
+      "percent": 0.0300719340654525,
+      "reference": "original",
+      "probability": 0.3,
+      "component": "master_parameter"
+    },
+    "update_optimizer_step": {
+      "percent": 0.0,
+      "reference": "original",
+      "probability": 0.0,
+      "component": "step"
+    },
+    "update_optimizer_exp_avg": {
+      "percent": 1.0205464244137512,
+      "reference": "original",
+      "probability": 0.0,
+      "component": "exp_avg"
+    },
+    "update_optimizer_exp_avg_sq": {
+      "percent": 1.9462911383342836,
+      "reference": "original",
+      "probability": 0.0,
+      "component": "exp_avg_sq"
+    },
+    "update_model_component_relative_l2": {
+      "percent": 0.08775308942059491,
+      "reference": "original",
+      "probability": 0.3,
+      "component": "video_output_head"
+    },
+    "final_forward_loss_relative_difference": {
+      "percent": 0.04402635471769667,
+      "reference": "upstream_accelerated",
+      "probability": 0.0,
+      "component": null
+    },
+    "final_model_component_relative_l2": {
+      "percent": 1.922291763141508,
+      "reference": "original",
+      "probability": 0.0,
+      "component": "diagnostic_probe"
+    },
+    "final_model_excluding_probe_relative_l2": {
+      "percent": 0.8674018414144369,
+      "reference": "original",
+      "probability": 0.3,
+      "component": "anticipation_tokens"
+    }
+  },
+  "timed_two_engine_max_allocated_gib": 15.977904796600342,
+  "timed_two_engine_max_reserved_gib": 16.9296875,
+  "validation": {
+    "cpu_tests_passed": 89,
+    "cpu_subtests_passed": 37,
+    "cuda_regressions_passed": 2,
+    "updates_per_variant": 78,
+    "paired_timing_steps_per_case": 60,
+    "initial_and_four_update_rng_equal": true
+  }
+}

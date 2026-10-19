@@ -21,6 +21,7 @@ from rift.utils.logging_config import get_logger
 from .fastwam import FastWAM
 from .helpers.gradient import gradient_checkpoint_forward
 from .helpers.static_tensor_cache import cached_tensor, exact_device_key
+from .helpers.training_acceleration import FutureHeadExecution, video_training_prediction
 from .wan_video_dit import RMSNorm, flash_attention
 
 logger = get_logger(__name__)
@@ -148,6 +149,8 @@ class RIFTModel(FastWAM):
         fm_lambda_final: Optional[float] = 0.2,
         fuse_training_paths: bool = False,
         train_probe_head: bool = True,
+        video_future_head_only: bool = False,
+        compile_future_head: bool = False,
     ) -> None:
         """Attach the RIFT FM head, diagnostic probe, and training schedule."""
         if latent_t < 2:
@@ -251,6 +254,9 @@ class RIFTModel(FastWAM):
         )
         self._anticip_step = 0
         self.fuse_training_paths = bool(fuse_training_paths)
+        self.video_future_head_only = bool(video_future_head_only)
+        self.compile_future_head = bool(compile_future_head)
+        self._future_head_execution = FutureHeadExecution()
 
         params = sum(parameter.numel() for parameter in anticipation.parameters())
         logger.info(
@@ -412,6 +418,18 @@ class RIFTModel(FastWAM):
             {name: tokens[batch_size:] for name, tokens in output.items()},
         )
 
+    def _video_training_prediction(self, tokens, pre_state):
+        return video_training_prediction(
+            self.video_expert, tokens, pre_state,
+            enabled=self.video_future_head_only, training=self.dit.training,
+        )
+
+    def _future_head_forward(self, noisy, timestep, condition):
+        return self._future_head_execution.run(
+            self.mot.anticip.head_fm, noisy, timestep, condition,
+            enabled=self.compile_future_head, training=self.dit.training,
+        )
+
     def training_loss(self, sample, tiled: bool = False):
         inputs = self.build_inputs(sample, tiled=tiled)
         input_latents = inputs["input_latents"]
@@ -562,7 +580,7 @@ class RIFTModel(FastWAM):
         else:
             output_b = self._training_mot_forward(video_pre_b, action_pre_b, mask_b)
 
-        prediction_video = self.video_expert.post_dit(output_a["video"], video_pre_a)[:, :, 1:]
+        prediction_video = self._video_training_prediction(output_a["video"], video_pre_a)
         target_video = target_video[:, :, 1:]
         video_per_sample = self._compute_video_loss_per_sample(
             pred_video=prediction_video,
@@ -618,7 +636,7 @@ class RIFTModel(FastWAM):
             target_patches, noise_fm, timestep_fm
         )
         prediction_fm = gradient_checkpoint_forward(
-            self.mot.anticip.head_fm,
+            self._future_head_forward,
             True,
             noised_patches,
             timestep_fm,
