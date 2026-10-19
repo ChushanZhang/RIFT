@@ -1,7 +1,7 @@
 import torch
 import numpy as np
 from pathlib import Path
-from typing import List, Literal, Dict, Optional, Any, DefaultDict
+from typing import List, Dict, Optional, Any, DefaultDict
 from tqdm import tqdm
 from .lerobot.lerobot_dataset import LeRobotDatasetMetadata, MultiLeRobotDataset
 
@@ -353,60 +353,36 @@ class BaseLerobotDataset(torch.utils.data.Dataset):
             batch = preprocessor.action_state_transform(batch)
             return batch
         
-        multi_thread = True
-        if not multi_thread:
-            for episode_idx in tqdm(range(episodes_num), desc="Iterating dataset to get normalization"):
-                batch = process_episode(episode_idx)
-                for meta in self.state_meta:
-                    key = meta["key"]
-                    cur_state: torch.Tensor = batch["state"][key] # (B, T, dim)
-                    state_min[key].append(cur_state.amin(0))
-                    state_max[key].append(cur_state.amax(0))
-                    state_mean[key].append(cur_state.mean(0))
-                    state_var[key].append(cur_state.var(0))
-                    state_q01[key].append(torch.quantile(cur_state, 0.01, dim=0, keepdim=False))
-                    state_q99[key].append(torch.quantile(cur_state, 0.99, dim=0, keepdim=False))
-                for meta in self.action_meta:
-                    key = meta["key"]
-                    cur_action: torch.Tensor = batch["action"][key] # (B, T, dim)
-                    action_min[key].append(cur_action.amin(0))
-                    action_max[key].append(cur_action.amax(0))
-                    action_mean[key].append(cur_action.mean(0))
-                    action_var[key].append(cur_action.var(0))
-                    action_q01[key].append(torch.quantile(cur_action, 0.01, dim=0, keepdim=False))
-                    action_q99[key].append(torch.quantile(cur_action, 0.99, dim=0, keepdim=False))
-        
-        else:
-            with ThreadPoolExecutor() as executor:
-                futures = [executor.submit(process_episode, num) for num in range(episodes_num)]
-                
-                for future in tqdm(as_completed(futures), total=episodes_num, desc="Iterating dataset to get normalization"):
-                    try:
-                        batch = future.result()
-                        for meta in self.state_meta:
-                            key = meta["key"]
-                            cur_state: torch.Tensor = batch["state"][key] # (B, T, dim)
-                            state_min[key].append(cur_state.amin(0))
-                            state_max[key].append(cur_state.amax(0))
-                            state_mean[key].append(cur_state.mean(0))
-                            state_var[key].append(cur_state.var(0))
-                            state_q01[key].append(torch.quantile(cur_state, 0.01, dim=0, keepdim=False))
-                            state_q99[key].append(torch.quantile(cur_state, 0.99, dim=0, keepdim=False))
+        with ThreadPoolExecutor() as executor:
+            futures = [executor.submit(process_episode, num) for num in range(episodes_num)]
 
-                        for meta in self.action_meta:
-                            key = meta["key"]
-                            cur_action: torch.Tensor = batch["action"][key] # (B, T, dim)
-                            action_min[key].append(cur_action.amin(0))
-                            action_max[key].append(cur_action.amax(0))
-                            action_mean[key].append(cur_action.mean(0))
-                            action_var[key].append(cur_action.var(0))
-                            action_q01[key].append(torch.quantile(cur_action, 0.01, dim=0, keepdim=False))
-                            action_q99[key].append(torch.quantile(cur_action, 0.99, dim=0, keepdim=False))
+            for future in tqdm(as_completed(futures), total=episodes_num, desc="Iterating dataset to get normalization"):
+                try:
+                    batch = future.result()
+                    for meta in self.state_meta:
+                        key = meta["key"]
+                        cur_state: torch.Tensor = batch["state"][key] # (B, T, dim)
+                        state_min[key].append(cur_state.amin(0))
+                        state_max[key].append(cur_state.amax(0))
+                        state_mean[key].append(cur_state.mean(0))
+                        state_var[key].append(cur_state.var(0))
+                        state_q01[key].append(torch.quantile(cur_state, 0.01, dim=0, keepdim=False))
+                        state_q99[key].append(torch.quantile(cur_state, 0.99, dim=0, keepdim=False))
 
-                    except Exception as e:
-                        logger.error(f"Error processing episode: {e}")
-                        print(traceback.format_exc())
-                        raise e
+                    for meta in self.action_meta:
+                        key = meta["key"]
+                        cur_action: torch.Tensor = batch["action"][key] # (B, T, dim)
+                        action_min[key].append(cur_action.amin(0))
+                        action_max[key].append(cur_action.amax(0))
+                        action_mean[key].append(cur_action.mean(0))
+                        action_var[key].append(cur_action.var(0))
+                        action_q01[key].append(torch.quantile(cur_action, 0.01, dim=0, keepdim=False))
+                        action_q99[key].append(torch.quantile(cur_action, 0.99, dim=0, keepdim=False))
+
+                except Exception as e:
+                    logger.error(f"Error processing episode: {e}")
+                    print(traceback.format_exc())
+                    raise e
 
         # assume that each minibatch has equal number of samples
         def get_mean_std(means, vars):

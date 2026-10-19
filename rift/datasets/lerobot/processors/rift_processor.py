@@ -5,8 +5,7 @@ import numpy as np
 from torchvision.transforms import Resize
 from copy import deepcopy
 from ..transforms.image import ToTensor
-from ..utils.normalizer import LinearNormalizer, NormMode
-from rift.utils.pytorch_utils import dict_apply
+from ..utils.normalizer import NormMode
 from rift.utils.logging_config import get_logger
 from .base_processor import BaseProcessor
 
@@ -89,35 +88,6 @@ class RIFTProcessor(BaseProcessor):
                         f"`delta_action_dim_mask[{key}]` length must be {expected_dim}, got {len(mask)}."
                     )
                 self.delta_action_dim_mask[key] = torch.as_tensor(mask, dtype=torch.bool)
-
-    @property
-    def is_train(self):
-        if self._is_train is None:
-            raise ValueError("is_train has not been set. Please call train() and eval() first.")
-        return self._is_train
-
-    @property
-    def normalizer(self) -> LinearNormalizer:
-        if self._normalizer is None:
-            raise ValueError("normalizer has not been set. Please call set_normalizer_from_stats() first.")
-        return self._normalizer
-
-    def train(self):
-        self._is_train = True
-        return self
-
-    def eval(self):
-        self._is_train = False
-        return self
-
-    def set_normalizer_from_stats(self, dataset_stats: Dict[str, Any] = None):
-        self._normalizer = LinearNormalizer(
-            use_stepwise_action_norm=self.use_stepwise_action_norm,
-            shape_meta=self.shape_meta,
-            default_mode=self.norm_default_mode,
-            exception_mode=self.norm_exception_mode,
-            stats=dataset_stats,
-        )
 
     def set_image_sample_indices(self, indices):
         """Select image frames before per-frame transforms; retain full state/padding."""
@@ -312,25 +282,3 @@ class RIFTProcessor(BaseProcessor):
         # sample = self.tokenizer(sample)
         
         return sample
-
-    def postprocess(self, data: Dict[str, Any]) -> Dict[str, Any]:
-        """
-        Postprocess the data for the policy model.
-        
-        Args:
-            data: Dict[str, Any], lerobot sample in raw mcap
-
-        Returns:
-            data: Dict[str, Any], processed data including unnormalized action
-        """
-        assert "action" in data, "Action is required in postprocess"
-        data["state"] = data.pop("proprio")
-        data = self.action_state_merger.backward(data)
-        data = self.normalizer.backward(data)
-        if self.action_state_transforms is not None:
-            for trans in reversed(self.action_state_transforms):
-                data = trans.backward(data)
-
-        start_obs_step = self.num_obs_steps - 1
-        data["action"] = dict_apply(data["action"], lambda x: x[:, start_obs_step:, :])
-        return data

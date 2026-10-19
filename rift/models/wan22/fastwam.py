@@ -698,66 +698,6 @@ class FastWAM(torch.nn.Module):
         return pred_video, pred_action
 
     @torch.no_grad()
-    def _predict_action_noise(
-        self,
-        first_frame_latents: torch.Tensor,
-        latents_action: torch.Tensor,
-        timestep_action: torch.Tensor,
-        context: torch.Tensor,
-        context_mask: torch.Tensor,
-        fuse_vae_embedding_in_latents: bool,
-    ) -> torch.Tensor:
-        timestep_video = torch.zeros_like(timestep_action, dtype=first_frame_latents.dtype, device=self.device)
-        video_pre = self.video_expert.pre_dit(
-            x=first_frame_latents,
-            timestep=timestep_video,
-            context=context,
-            context_mask=context_mask,
-            action=None,
-            fuse_vae_embedding_in_latents=fuse_vae_embedding_in_latents,
-        )
-        action_pre = self.action_expert.pre_dit(
-            action_tokens=latents_action,
-            timestep=timestep_action,
-            context=context,
-            context_mask=context_mask,
-        )
-
-        attention_mask = self._build_mot_attention_mask(
-            video_seq_len=video_pre["tokens"].shape[1],
-            action_seq_len=action_pre["tokens"].shape[1],
-            video_tokens_per_frame=int(video_pre["meta"]["tokens_per_frame"]),
-            device=video_pre["tokens"].device,
-        )
-        tokens_out = self.mot(
-            embeds_all={
-                "video": video_pre["tokens"],
-                "action": action_pre["tokens"],
-            },
-            attention_mask=attention_mask,
-            freqs_all={
-                "video": video_pre["freqs"],
-                "action": action_pre["freqs"],
-            },
-            context_all={
-                "video": {
-                    "context": video_pre["context"],
-                    "mask": video_pre["context_mask"],
-                },
-                "action": {
-                    "context": action_pre["context"],
-                    "mask": action_pre["context_mask"],
-                },
-            },
-            t_mod_all={
-                "video": video_pre["t_mod"],
-                "action": action_pre["t_mod"],
-            },
-        )
-        pred_action = self.action_expert.post_dit(tokens_out["action"], action_pre)
-        return pred_action
-
-    @torch.no_grad()
     def _predict_action_noise_with_cache(
         self,
         latents_action: torch.Tensor,

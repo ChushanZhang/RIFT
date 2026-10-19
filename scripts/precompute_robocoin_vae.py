@@ -18,7 +18,7 @@ import torch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from rift.models.wan22.helpers.loader import _load_registered_model
-from rift.utils.vae_latent_cache import VaeCacheCollator, VaeLatentCache, tensor_digest
+from rift.utils.vae_latent_cache import VaeCacheCollator, VaeLatentCache
 from robocoin_vae_inputs import (
     discover_episodes,
     make_window,

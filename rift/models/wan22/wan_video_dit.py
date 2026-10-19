@@ -551,8 +551,6 @@ class WanVideoDiT(torch.nn.Module):
             t_mod = self.time_projection(t).unflatten(2, (6, self.hidden_dim))
         else:
             raise NotImplementedError("Only support seperated_timestep with fuse_vae_embedding_in_latents for now.")
-            t = self.time_embedding(sinusoidal_embedding_1d(self.freq_dim, timestep))
-            t_mod = self.time_projection(t).unflatten(1, (6, self.hidden_dim))
         x = self.patchify(x, control_camera_latents_input=control_camera_latents_input)
         f, h, w = x.shape[2:]
 

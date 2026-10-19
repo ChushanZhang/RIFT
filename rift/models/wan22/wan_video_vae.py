@@ -858,7 +858,6 @@ class Decoder3d_38(nn.Module):
 
         # dimensions
         dims = [dim * u for u in [dim_mult[-1]] + dim_mult[::-1]]
-        scale = 1.0 / 2 ** (len(dim_mult) - 2)
         # init block
         self.conv1 = CausalConv3d(z_dim, dims[0], 3, padding=1)
 
@@ -1222,9 +1221,6 @@ class WanVideoVAE(nn.Module):
             video = video.unsqueeze(0)
             if tiled:
                 raise NotImplementedError("Tiled encoding is not allowed yet.")
-                tile_size = (tile_size[0] * self.upsampling_factor, tile_size[1] * self.upsampling_factor)
-                tile_stride = (tile_stride[0] * self.upsampling_factor, tile_stride[1] * self.upsampling_factor)
-                hidden_state = self.tiled_encode(video, device, tile_size, tile_stride)
             else:
                 hidden_state = self.single_encode(video, device)
             hidden_state = hidden_state.squeeze(0)
