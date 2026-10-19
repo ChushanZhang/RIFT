@@ -1,0 +1,2205 @@
+{
+  "created_utc": "2026-10-19T00:52:25.032564+00:00",
+  "torch_version": "2.7.1+cu128",
+  "status": "complete",
+  "cases": [
+    {
+      "scope": "video_prefill",
+      "outputs_bitwise_equal": true,
+      "cpu_and_cuda_rng_equal": true,
+      "median_wall_ms": {
+        "original": 70.79520402476192,
+        "optimized": 68.81020549917594
+      },
+      "median_cuda_ms": {
+        "original": 70.76953506469727,
+        "optimized": 68.78305435180664
+      },
+      "paired_median_time_change_percent": -2.8180818954843865,
+      "paired_median_time_change_95ci": [
+        -2.840441151473816,
+        -2.8076966415254203
+      ],
+      "order_strata_median_percent": {
+        "0": -2.8134327845376115,
+        "1": -2.8327580171383926
+      },
+      "faster_pairs": 60,
+      "raw_pairs": [
+        {
+          "pair": 0,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 70.81059698248282,
+          "original_cuda_ms": 70.73894500732422,
+          "optimized_wall_ms": 68.62268701661378,
+          "optimized_cuda_ms": 68.58649444580078
+        },
+        {
+          "pair": 1,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 68.57960601337254,
+          "optimized_cuda_ms": 68.5436782836914,
+          "original_wall_ms": 70.56093297433108,
+          "original_cuda_ms": 70.53414154052734
+        },
+        {
+          "pair": 2,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 70.91856800252572,
+          "original_cuda_ms": 70.89446258544922,
+          "optimized_wall_ms": 68.94546694820747,
+          "optimized_cuda_ms": 68.90393829345703
+        },
+        {
+          "pair": 3,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 68.91021103365347,
+          "optimized_cuda_ms": 68.87117004394531,
+          "original_wall_ms": 70.9790900000371,
+          "original_cuda_ms": 70.94064331054688
+        },
+        {
+          "pair": 4,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 70.92027203179896,
+          "original_cuda_ms": 70.8853759765625,
+          "optimized_wall_ms": 68.88227903982624,
+          "optimized_cuda_ms": 68.85174560546875
+        },
+        {
+          "pair": 5,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 68.89581400901079,
+          "optimized_cuda_ms": 68.853759765625,
+          "original_wall_ms": 70.96916204318404,
+          "original_cuda_ms": 70.92559814453125
+        },
+        {
+          "pair": 6,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 70.89660700876266,
+          "original_cuda_ms": 70.87324523925781,
+          "optimized_wall_ms": 68.9111829851754,
+          "optimized_cuda_ms": 68.88448333740234
+        },
+        {
+          "pair": 7,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 68.77836602507159,
+          "optimized_cuda_ms": 68.75408172607422,
+          "original_wall_ms": 70.74713899055496,
+          "original_cuda_ms": 70.72844696044922
+        },
+        {
+          "pair": 8,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 70.77987003140152,
+          "original_cuda_ms": 70.76351928710938,
+          "optimized_wall_ms": 68.78980703186244,
+          "optimized_cuda_ms": 68.77388763427734
+        },
+        {
+          "pair": 9,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 68.77558102132753,
+          "optimized_cuda_ms": 68.75443267822266,
+          "original_wall_ms": 70.78622200060636,
+          "original_cuda_ms": 70.761474609375
+        },
+        {
+          "pair": 10,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 70.8031429676339,
+          "original_cuda_ms": 70.78092956542969,
+          "optimized_wall_ms": 68.8681430183351,
+          "optimized_cuda_ms": 68.8505630493164
+        },
+        {
+          "pair": 11,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 68.76347900833935,
+          "optimized_cuda_ms": 68.74591827392578,
+          "original_wall_ms": 70.78277599066496,
+          "original_cuda_ms": 70.7583999633789
+        },
+        {
+          "pair": 12,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 70.83266804693267,
+          "original_cuda_ms": 70.81231689453125,
+          "optimized_wall_ms": 68.84382799034938,
+          "optimized_cuda_ms": 68.81587219238281
+        },
+        {
+          "pair": 13,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 68.80018697120249,
+          "optimized_cuda_ms": 68.77184295654297,
+          "original_wall_ms": 70.78773505054414,
+          "original_cuda_ms": 70.76319885253906
+        },
+        {
+          "pair": 14,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 70.80158003373072,
+          "original_cuda_ms": 70.78092956542969,
+          "optimized_wall_ms": 68.85213300120085,
+          "optimized_cuda_ms": 68.82498931884766
+        },
+        {
+          "pair": 15,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 68.81107698427513,
+          "optimized_cuda_ms": 68.78514862060547,
+          "original_wall_ms": 70.77751599717885,
+          "original_cuda_ms": 70.75849914550781
+        },
+        {
+          "pair": 16,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 70.75151696335524,
+          "original_cuda_ms": 70.73792266845703,
+          "optimized_wall_ms": 68.77049198374152,
+          "optimized_cuda_ms": 68.75743865966797
+        },
+        {
+          "pair": 17,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 68.7729159835726,
+          "optimized_cuda_ms": 68.74726104736328,
+          "original_wall_ms": 70.76163601595908,
+          "original_cuda_ms": 70.74291229248047
+        },
+        {
+          "pair": 18,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 70.76587399933487,
+          "original_cuda_ms": 70.75103759765625,
+          "optimized_wall_ms": 68.76594299683347,
+          "optimized_cuda_ms": 68.74406433105469
+        },
+        {
+          "pair": 19,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 68.76328802900389,
+          "optimized_cuda_ms": 68.74313354492188,
+          "original_wall_ms": 70.75252901995555,
+          "original_cuda_ms": 70.73382568359375
+        },
+        {
+          "pair": 20,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 70.7834970089607,
+          "original_cuda_ms": 70.76659393310547,
+          "optimized_wall_ms": 68.78362694988027,
+          "optimized_cuda_ms": 68.76649475097656
+        },
+        {
+          "pair": 21,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 68.79901495995,
+          "optimized_cuda_ms": 68.77177429199219,
+          "original_wall_ms": 70.77116402797401,
+          "original_cuda_ms": 70.75225830078125
+        },
+        {
+          "pair": 22,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 70.76031400356442,
+          "original_cuda_ms": 70.74610900878906,
+          "optimized_wall_ms": 68.79426602972671,
+          "optimized_cuda_ms": 68.76764678955078
+        },
+        {
+          "pair": 23,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 68.95708898082376,
+          "optimized_cuda_ms": 68.91827392578125,
+          "original_wall_ms": 70.773797982838,
+          "original_cuda_ms": 70.7524185180664
+        },
+        {
+          "pair": 24,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 70.77926903730258,
+          "original_cuda_ms": 70.76351928710938,
+          "optimized_wall_ms": 68.83922999259084,
+          "optimized_cuda_ms": 68.80870056152344
+        },
+        {
+          "pair": 25,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 68.83803696837276,
+          "optimized_cuda_ms": 68.80973052978516,
+          "original_wall_ms": 70.94544795108959,
+          "original_cuda_ms": 70.91302490234375
+        },
+        {
+          "pair": 26,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 70.84194500930607,
+          "original_cuda_ms": 70.81779479980469,
+          "optimized_wall_ms": 68.7865309882909,
+          "optimized_cuda_ms": 68.76774597167969
+        },
+        {
+          "pair": 27,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 68.80933401407674,
+          "optimized_cuda_ms": 68.78720092773438,
+          "original_wall_ms": 70.82467299187556,
+          "original_cuda_ms": 70.80038452148438
+        },
+        {
+          "pair": 28,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 70.92784496489912,
+          "original_cuda_ms": 70.90278625488281,
+          "optimized_wall_ms": 68.94073798321187,
+          "optimized_cuda_ms": 68.91622161865234
+        },
+        {
+          "pair": 29,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 68.89543397119269,
+          "optimized_cuda_ms": 68.86605072021484,
+          "original_wall_ms": 70.9433340234682,
+          "original_cuda_ms": 70.91795349121094
+        },
+        {
+          "pair": 30,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 70.89418300893158,
+          "original_cuda_ms": 70.8720932006836,
+          "optimized_wall_ms": 68.90873896190897,
+          "optimized_cuda_ms": 68.88448333740234
+        },
+        {
+          "pair": 31,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 68.8835319597274,
+          "optimized_cuda_ms": 68.85273742675781,
+          "original_wall_ms": 70.79370605060831,
+          "original_cuda_ms": 70.76659393310547
+        },
+        {
+          "pair": 32,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 70.94783202046528,
+          "original_cuda_ms": 70.91712188720703,
+          "optimized_wall_ms": 68.91885801451281,
+          "optimized_cuda_ms": 68.89266967773438
+        },
+        {
+          "pair": 33,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 68.89450299786404,
+          "optimized_cuda_ms": 68.86576080322266,
+          "original_wall_ms": 70.91602397849783,
+          "original_cuda_ms": 70.89049530029297
+        },
+        {
+          "pair": 34,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 70.91306801885366,
+          "original_cuda_ms": 70.88947296142578,
+          "optimized_wall_ms": 68.82282899459824,
+          "optimized_cuda_ms": 68.8005142211914
+        },
+        {
+          "pair": 35,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 68.996332003735,
+          "optimized_cuda_ms": 68.96463775634766,
+          "original_wall_ms": 70.76788798440248,
+          "original_cuda_ms": 70.7470703125
+        },
+        {
+          "pair": 36,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 70.79759298358113,
+          "original_cuda_ms": 70.78195190429688,
+          "optimized_wall_ms": 68.79714102251455,
+          "optimized_cuda_ms": 68.76774597167969
+        },
+        {
+          "pair": 37,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 68.94332397496328,
+          "optimized_cuda_ms": 68.91212463378906,
+          "original_wall_ms": 70.79148199409246,
+          "original_cuda_ms": 70.75737762451172
+        },
+        {
+          "pair": 38,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 70.79670199891552,
+          "original_cuda_ms": 70.7768325805664,
+          "optimized_wall_ms": 68.90029401984066,
+          "optimized_cuda_ms": 68.87321472167969
+        },
+        {
+          "pair": 39,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 68.77022102707997,
+          "optimized_cuda_ms": 68.74918365478516,
+          "original_wall_ms": 70.79135201638564,
+          "original_cuda_ms": 70.76863861083984
+        },
+        {
+          "pair": 40,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 70.78340603038669,
+          "original_cuda_ms": 70.76557159423828,
+          "optimized_wall_ms": 68.78666201373562,
+          "optimized_cuda_ms": 68.76262664794922
+        },
+        {
+          "pair": 41,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 68.80154996179044,
+          "optimized_cuda_ms": 68.77056121826172,
+          "original_wall_ms": 70.78711304347962,
+          "original_cuda_ms": 70.76329803466797
+        },
+        {
+          "pair": 42,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 70.80323400441557,
+          "original_cuda_ms": 70.77967834472656,
+          "optimized_wall_ms": 68.96449299529195,
+          "optimized_cuda_ms": 68.92876434326172
+        },
+        {
+          "pair": 43,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 68.78194300225005,
+          "optimized_cuda_ms": 68.75852966308594,
+          "original_wall_ms": 70.7896490348503,
+          "original_cuda_ms": 70.76943969726562
+        },
+        {
+          "pair": 44,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 70.76036400394514,
+          "original_cuda_ms": 70.7399673461914,
+          "optimized_wall_ms": 68.7682880088687,
+          "optimized_cuda_ms": 68.75545501708984
+        },
+        {
+          "pair": 45,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 68.76896898029372,
+          "optimized_cuda_ms": 68.75033569335938,
+          "original_wall_ms": 70.7713439478539,
+          "original_cuda_ms": 70.75225830078125
+        },
+        {
+          "pair": 46,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 70.75826998334378,
+          "original_cuda_ms": 70.74406433105469,
+          "optimized_wall_ms": 68.7822540057823,
+          "optimized_cuda_ms": 68.75933074951172
+        },
+        {
+          "pair": 47,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 68.7873029964976,
+          "optimized_cuda_ms": 68.75823974609375,
+          "original_wall_ms": 70.7743899547495,
+          "original_cuda_ms": 70.75516510009766
+        },
+        {
+          "pair": 48,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 70.78357698628679,
+          "original_cuda_ms": 70.7696304321289,
+          "optimized_wall_ms": 68.78567102830857,
+          "optimized_cuda_ms": 68.76435089111328
+        },
+        {
+          "pair": 49,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 68.75759799731895,
+          "optimized_cuda_ms": 68.73497772216797,
+          "original_wall_ms": 70.78566099517047,
+          "original_cuda_ms": 70.76534271240234
+        },
+        {
+          "pair": 50,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 70.81187999574468,
+          "original_cuda_ms": 70.793212890625,
+          "optimized_wall_ms": 68.77864699345082,
+          "optimized_cuda_ms": 68.75843048095703
+        },
+        {
+          "pair": 51,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 68.81569599499926,
+          "optimized_cuda_ms": 68.78412628173828,
+          "original_wall_ms": 70.95751102315262,
+          "original_cuda_ms": 70.92736053466797
+        },
+        {
+          "pair": 52,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 70.8431180100888,
+          "original_cuda_ms": 70.82393646240234,
+          "optimized_wall_ms": 68.77901800908148,
+          "optimized_cuda_ms": 68.75523376464844
+        },
+        {
+          "pair": 53,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 68.82148701697588,
+          "optimized_cuda_ms": 68.781982421875,
+          "original_wall_ms": 70.99167403066531,
+          "original_cuda_ms": 70.94681549072266
+        },
+        {
+          "pair": 54,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 70.93681202968583,
+          "original_cuda_ms": 70.91302490234375,
+          "optimized_wall_ms": 68.78378696274012,
+          "optimized_cuda_ms": 68.759521484375
+        },
+        {
+          "pair": 55,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 68.87813203502446,
+          "optimized_cuda_ms": 68.8506851196289,
+          "original_wall_ms": 70.90484298532829,
+          "original_cuda_ms": 70.88265228271484
+        },
+        {
+          "pair": 56,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 70.75062597868964,
+          "original_cuda_ms": 70.73372650146484,
+          "optimized_wall_ms": 68.89933202182874,
+          "optimized_cuda_ms": 68.87014770507812
+        },
+        {
+          "pair": 57,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 68.85312602389604,
+          "optimized_cuda_ms": 68.82083129882812,
+          "original_wall_ms": 70.87984698591754,
+          "original_cuda_ms": 70.85465240478516
+        },
+        {
+          "pair": 58,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 70.96068700775504,
+          "original_cuda_ms": 70.93350219726562,
+          "optimized_wall_ms": 68.94037802703679,
+          "optimized_cuda_ms": 68.91519927978516
+        },
+        {
+          "pair": 59,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 68.98774596629664,
+          "optimized_cuda_ms": 68.95410919189453,
+          "original_wall_ms": 70.95312204910442,
+          "original_cuda_ms": 70.91609954833984
+        }
+      ],
+      "peak_allocated_bytes": 12270358016,
+      "peak_reserved_bytes": 12402556928,
+      "activity_before": {
+        "gpus": "NVIDIA GeForce RTX 3070, GPU-ab4ed20a-c3c1-b648-84d3-ca42cf3b352b, 35 %, 1531 MiB, 48, 420 MHz, 23.58 W\nNVIDIA GeForce RTX 3090, GPU-868c67e2-83b5-a202-2686-77c7402cec07, 45 %, 12169 MiB, 42, 1965 MHz, 336.68 W",
+        "returncode": 0,
+        "compute_processes": "952394, GPU-ab4ed20a-c3c1-b648-84d3-ca42cf3b352b, 82 MiB\n2324705, GPU-ab4ed20a-c3c1-b648-84d3-ca42cf3b352b, 101 MiB\n2358510, GPU-868c67e2-83b5-a202-2686-77c7402cec07, 12144 MiB",
+        "benchmark_pid": 2358510,
+        "loadavg": [
+          1.37744140625,
+          1.13623046875,
+          0.9638671875
+        ]
+      },
+      "activity_after": {
+        "gpus": "NVIDIA GeForce RTX 3070, GPU-ab4ed20a-c3c1-b648-84d3-ca42cf3b352b, 15 %, 1530 MiB, 50, 1815 MHz, 33.32 W\nNVIDIA GeForce RTX 3090, GPU-868c67e2-83b5-a202-2686-77c7402cec07, 100 %, 12169 MiB, 44, 1980 MHz, 348.08 W",
+        "returncode": 0,
+        "compute_processes": "952394, GPU-ab4ed20a-c3c1-b648-84d3-ca42cf3b352b, 82 MiB\n2324705, GPU-ab4ed20a-c3c1-b648-84d3-ca42cf3b352b, 101 MiB\n2358510, GPU-868c67e2-83b5-a202-2686-77c7402cec07, 12144 MiB",
+        "benchmark_pid": 2358510,
+        "loadavg": [
+          1.3193359375,
+          1.13134765625,
+          0.96484375
+        ]
+      }
+    },
+    {
+      "scope": "infer_action_10_steps",
+      "outputs_bitwise_equal": true,
+      "cpu_and_cuda_rng_equal": true,
+      "median_wall_ms": {
+        "original": 253.79795851767994,
+        "optimized": 252.17392103513703
+      },
+      "median_cuda_ms": {
+        "original": 253.7762680053711,
+        "optimized": 252.15357208251953
+      },
+      "paired_median_time_change_percent": -0.8247713183145766,
+      "paired_median_time_change_95ci": [
+        -0.9503617220976535,
+        -0.6916862225695652
+      ],
+      "order_strata_median_percent": {
+        "0": -0.8502099184103384,
+        "1": -0.7446413482723513
+      },
+      "faster_pairs": 51,
+      "raw_pairs": [
+        {
+          "pair": 0,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 254.12634399253875,
+          "original_cuda_ms": 254.06857299804688,
+          "optimized_wall_ms": 250.9605449740775,
+          "optimized_cuda_ms": 250.9405059814453
+        },
+        {
+          "pair": 1,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 252.9594730003737,
+          "optimized_cuda_ms": 252.9397430419922,
+          "original_wall_ms": 257.3996540158987,
+          "original_cuda_ms": 257.378173828125
+        },
+        {
+          "pair": 2,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 257.06277799326926,
+          "original_cuda_ms": 257.04132080078125,
+          "optimized_wall_ms": 255.81375398905948,
+          "optimized_cuda_ms": 255.79273986816406
+        },
+        {
+          "pair": 3,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 253.06278601055965,
+          "optimized_cuda_ms": 253.04144287109375,
+          "original_wall_ms": 252.22053902689368,
+          "original_cuda_ms": 252.20022583007812
+        },
+        {
+          "pair": 4,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 254.34360903454944,
+          "original_cuda_ms": 254.32325744628906,
+          "optimized_wall_ms": 253.31501598702744,
+          "optimized_cuda_ms": 253.2939453125
+        },
+        {
+          "pair": 5,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 256.2901509809308,
+          "optimized_cuda_ms": 256.26898193359375,
+          "original_wall_ms": 252.08864297019318,
+          "original_cuda_ms": 252.06906127929688
+        },
+        {
+          "pair": 6,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 254.05131495790556,
+          "original_cuda_ms": 254.03021240234375,
+          "optimized_wall_ms": 252.2940770140849,
+          "optimized_cuda_ms": 252.27401733398438
+        },
+        {
+          "pair": 7,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 253.33986204350367,
+          "optimized_cuda_ms": 253.31817626953125,
+          "original_wall_ms": 251.58601900329813,
+          "original_cuda_ms": 251.56442260742188
+        },
+        {
+          "pair": 8,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 259.6639880212024,
+          "original_cuda_ms": 259.6404113769531,
+          "optimized_wall_ms": 257.0535109844059,
+          "optimized_cuda_ms": 257.0330810546875
+        },
+        {
+          "pair": 9,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 258.78242700127885,
+          "optimized_cuda_ms": 258.7608947753906,
+          "original_wall_ms": 261.1806999775581,
+          "original_cuda_ms": 261.1590576171875
+        },
+        {
+          "pair": 10,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 257.2478629881516,
+          "original_cuda_ms": 257.2259216308594,
+          "optimized_wall_ms": 254.99638501787558,
+          "optimized_cuda_ms": 254.97418212890625
+        },
+        {
+          "pair": 11,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 253.16860398743302,
+          "optimized_cuda_ms": 253.14842224121094,
+          "original_wall_ms": 252.1893520024605,
+          "original_cuda_ms": 252.16854858398438
+        },
+        {
+          "pair": 12,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 253.43213399173692,
+          "original_cuda_ms": 253.411865234375,
+          "optimized_wall_ms": 251.23664998682216,
+          "optimized_cuda_ms": 251.21551513671875
+        },
+        {
+          "pair": 13,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 252.2302780416794,
+          "optimized_cuda_ms": 252.2100830078125,
+          "original_wall_ms": 251.55750702833757,
+          "original_cuda_ms": 251.53663635253906
+        },
+        {
+          "pair": 14,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 250.90715702390298,
+          "original_cuda_ms": 250.88706970214844,
+          "optimized_wall_ms": 249.04422200052068,
+          "optimized_cuda_ms": 249.02528381347656
+        },
+        {
+          "pair": 15,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 250.3943130141124,
+          "optimized_cuda_ms": 250.3739776611328,
+          "original_wall_ms": 254.435951996129,
+          "original_cuda_ms": 254.4154815673828
+        },
+        {
+          "pair": 16,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 255.78795798355713,
+          "original_cuda_ms": 255.767333984375,
+          "optimized_wall_ms": 252.91743699926883,
+          "optimized_cuda_ms": 252.89385986328125
+        },
+        {
+          "pair": 17,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 256.22559199109674,
+          "optimized_cuda_ms": 256.2041320800781,
+          "original_wall_ms": 257.6921610161662,
+          "original_cuda_ms": 257.6717224121094
+        },
+        {
+          "pair": 18,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 256.9918379886076,
+          "original_cuda_ms": 256.97125244140625,
+          "optimized_wall_ms": 254.5214819838293,
+          "optimized_cuda_ms": 254.5004425048828
+        },
+        {
+          "pair": 19,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 251.40569498762488,
+          "optimized_cuda_ms": 251.3855743408203,
+          "original_wall_ms": 253.10061901109293,
+          "original_cuda_ms": 253.07862854003906
+        },
+        {
+          "pair": 20,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 253.33511497592553,
+          "original_cuda_ms": 253.3139190673828,
+          "optimized_wall_ms": 251.78529199911281,
+          "optimized_cuda_ms": 251.7638397216797
+        },
+        {
+          "pair": 21,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 253.36223503109068,
+          "optimized_cuda_ms": 253.34051513671875,
+          "original_wall_ms": 250.87088998407125,
+          "original_cuda_ms": 250.8509063720703
+        },
+        {
+          "pair": 22,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 250.62818900914863,
+          "original_cuda_ms": 250.60887145996094,
+          "optimized_wall_ms": 248.42100299429148,
+          "optimized_cuda_ms": 248.40293884277344
+        },
+        {
+          "pair": 23,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 249.55279799178243,
+          "optimized_cuda_ms": 249.53219604492188,
+          "original_wall_ms": 252.65092303743586,
+          "original_cuda_ms": 252.6304931640625
+        },
+        {
+          "pair": 24,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 253.457774000708,
+          "original_cuda_ms": 253.43472290039062,
+          "optimized_wall_ms": 251.09286402584985,
+          "optimized_cuda_ms": 251.0728302001953
+        },
+        {
+          "pair": 25,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 253.70537501294166,
+          "optimized_cuda_ms": 253.68460083007812,
+          "original_wall_ms": 258.81871802266687,
+          "original_cuda_ms": 258.7976379394531
+        },
+        {
+          "pair": 26,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 257.95451999874786,
+          "original_cuda_ms": 257.9333190917969,
+          "optimized_wall_ms": 254.81092202244326,
+          "optimized_cuda_ms": 254.78807067871094
+        },
+        {
+          "pair": 27,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 248.79926699213684,
+          "optimized_cuda_ms": 248.7795867919922,
+          "original_wall_ms": 252.68963596317917,
+          "original_cuda_ms": 252.66943359375
+        },
+        {
+          "pair": 28,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 252.4956439738162,
+          "original_cuda_ms": 252.47573852539062,
+          "optimized_wall_ms": 249.9200320453383,
+          "optimized_cuda_ms": 249.9001007080078
+        },
+        {
+          "pair": 29,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 251.4661789755337,
+          "optimized_cuda_ms": 251.44583129882812,
+          "original_wall_ms": 251.79530103923753,
+          "original_cuda_ms": 251.77369689941406
+        },
+        {
+          "pair": 30,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 256.6980830160901,
+          "original_cuda_ms": 256.6773376464844,
+          "optimized_wall_ms": 253.80541099002585,
+          "optimized_cuda_ms": 253.78390502929688
+        },
+        {
+          "pair": 31,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 254.97387495124713,
+          "optimized_cuda_ms": 254.95318603515625,
+          "original_wall_ms": 252.0675979903899,
+          "original_cuda_ms": 252.04701232910156
+        },
+        {
+          "pair": 32,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 253.64479195559397,
+          "original_cuda_ms": 253.6236114501953,
+          "optimized_wall_ms": 251.64851901354268,
+          "optimized_cuda_ms": 251.62844848632812
+        },
+        {
+          "pair": 33,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 254.18420700589195,
+          "optimized_cuda_ms": 254.16281127929688,
+          "original_wall_ms": 255.70609798887745,
+          "original_cuda_ms": 255.6845703125
+        },
+        {
+          "pair": 34,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 256.47547899279743,
+          "original_cuda_ms": 256.4452209472656,
+          "optimized_wall_ms": 254.3841180158779,
+          "optimized_cuda_ms": 254.3629150390625
+        },
+        {
+          "pair": 35,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 248.40262002544478,
+          "optimized_cuda_ms": 248.3817901611328,
+          "original_wall_ms": 253.7698260275647,
+          "original_cuda_ms": 253.74671936035156
+        },
+        {
+          "pair": 36,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 255.30601397622377,
+          "original_cuda_ms": 255.2758026123047,
+          "optimized_wall_ms": 253.48108902107924,
+          "optimized_cuda_ms": 253.45936584472656
+        },
+        {
+          "pair": 37,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 250.57979201665148,
+          "optimized_cuda_ms": 250.5596160888672,
+          "original_wall_ms": 250.618323974777,
+          "original_cuda_ms": 250.60198974609375
+        },
+        {
+          "pair": 38,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 250.7903030491434,
+          "original_cuda_ms": 250.7755584716797,
+          "optimized_wall_ms": 248.55775898322463,
+          "optimized_cuda_ms": 248.53564453125
+        },
+        {
+          "pair": 39,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 248.46240202896297,
+          "optimized_cuda_ms": 248.4434814453125,
+          "original_wall_ms": 253.82609100779518,
+          "original_cuda_ms": 253.80581665039062
+        },
+        {
+          "pair": 40,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 252.18222197145224,
+          "original_cuda_ms": 252.16146850585938,
+          "optimized_wall_ms": 251.7054449999705,
+          "optimized_cuda_ms": 251.6820831298828
+        },
+        {
+          "pair": 41,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 253.9640180184506,
+          "optimized_cuda_ms": 253.9423370361328,
+          "original_wall_ms": 257.8881880035624,
+          "original_cuda_ms": 257.86663818359375
+        },
+        {
+          "pair": 42,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 254.9403039738536,
+          "original_cuda_ms": 254.91810607910156,
+          "optimized_wall_ms": 253.28744895523414,
+          "optimized_cuda_ms": 253.26678466796875
+        },
+        {
+          "pair": 43,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 249.60342602571473,
+          "optimized_cuda_ms": 249.58274841308594,
+          "original_wall_ms": 254.06655902042985,
+          "original_cuda_ms": 254.04502868652344
+        },
+        {
+          "pair": 44,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 253.4353450173512,
+          "original_cuda_ms": 253.41488647460938,
+          "optimized_wall_ms": 251.321391959209,
+          "optimized_cuda_ms": 251.3005828857422
+        },
+        {
+          "pair": 45,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 250.27233001310378,
+          "optimized_cuda_ms": 250.25193786621094,
+          "original_wall_ms": 252.1558350417763,
+          "original_cuda_ms": 252.13539123535156
+        },
+        {
+          "pair": 46,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 253.06075799744576,
+          "original_cuda_ms": 253.0396728515625,
+          "optimized_wall_ms": 249.66428900370374,
+          "optimized_cuda_ms": 249.64361572265625
+        },
+        {
+          "pair": 47,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 248.47396498080343,
+          "optimized_cuda_ms": 248.45782470703125,
+          "original_wall_ms": 253.73940099962056,
+          "original_cuda_ms": 253.718017578125
+        },
+        {
+          "pair": 48,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 253.4994640154764,
+          "original_cuda_ms": 253.47830200195312,
+          "optimized_wall_ms": 252.11756402859464,
+          "optimized_cuda_ms": 252.09706115722656
+        },
+        {
+          "pair": 49,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 254.8018770175986,
+          "optimized_cuda_ms": 254.7795867919922,
+          "original_wall_ms": 256.707473017741,
+          "original_cuda_ms": 256.6864318847656
+        },
+        {
+          "pair": 50,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 256.64657005108893,
+          "original_cuda_ms": 256.62530517578125,
+          "optimized_wall_ms": 251.79523398401216,
+          "optimized_cuda_ms": 251.77430725097656
+        },
+        {
+          "pair": 51,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 249.29590499959886,
+          "optimized_cuda_ms": 249.27548217773438,
+          "original_wall_ms": 255.81625499762595,
+          "original_cuda_ms": 255.79501342773438
+        },
+        {
+          "pair": 52,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 257.4453060515225,
+          "original_cuda_ms": 257.4244079589844,
+          "optimized_wall_ms": 257.56486802129075,
+          "optimized_cuda_ms": 257.54376220703125
+        },
+        {
+          "pair": 53,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 253.2723220065236,
+          "optimized_cuda_ms": 253.25228881835938,
+          "original_wall_ms": 251.0000960319303,
+          "original_cuda_ms": 250.9796142578125
+        },
+        {
+          "pair": 54,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 250.79773901961744,
+          "original_cuda_ms": 250.77891540527344,
+          "optimized_wall_ms": 249.52917802147567,
+          "optimized_cuda_ms": 249.50857543945312
+        },
+        {
+          "pair": 55,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 250.11879595695063,
+          "optimized_cuda_ms": 250.09750366210938,
+          "original_wall_ms": 255.069195991382,
+          "original_cuda_ms": 255.0474853515625
+        },
+        {
+          "pair": 56,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 254.1584320133552,
+          "original_cuda_ms": 254.13760375976562,
+          "optimized_wall_ms": 253.87313100509346,
+          "optimized_cuda_ms": 253.8522186279297
+        },
+        {
+          "pair": 57,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 254.23850095830858,
+          "optimized_cuda_ms": 254.21658325195312,
+          "original_wall_ms": 255.53049403242767,
+          "original_cuda_ms": 255.50904846191406
+        },
+        {
+          "pair": 58,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 256.43808295717463,
+          "original_cuda_ms": 256.41607666015625,
+          "optimized_wall_ms": 251.3484539813362,
+          "optimized_cuda_ms": 251.32765197753906
+        },
+        {
+          "pair": 59,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 249.77861298248172,
+          "optimized_cuda_ms": 249.75782775878906,
+          "original_wall_ms": 253.46191599965096,
+          "original_cuda_ms": 253.44076538085938
+        }
+      ],
+      "peak_allocated_bytes": 12290370048,
+      "peak_reserved_bytes": 12406751232,
+      "activity_before": {
+        "gpus": "NVIDIA GeForce RTX 3070, GPU-ab4ed20a-c3c1-b648-84d3-ca42cf3b352b, 20 %, 1500 MiB, 48, 465 MHz, 23.15 W\nNVIDIA GeForce RTX 3090, GPU-868c67e2-83b5-a202-2686-77c7402cec07, 48 %, 12173 MiB, 39, 1980 MHz, 254.13 W",
+        "returncode": 0,
+        "compute_processes": "952394, GPU-ab4ed20a-c3c1-b648-84d3-ca42cf3b352b, 82 MiB\n2324705, GPU-ab4ed20a-c3c1-b648-84d3-ca42cf3b352b, 101 MiB\n2358510, GPU-868c67e2-83b5-a202-2686-77c7402cec07, 12148 MiB",
+        "benchmark_pid": 2358510,
+        "loadavg": [
+          1.26953125,
+          1.12646484375,
+          0.9658203125
+        ]
+      },
+      "activity_after": {
+        "gpus": "NVIDIA GeForce RTX 3070, GPU-ab4ed20a-c3c1-b648-84d3-ca42cf3b352b, 5 %, 1530 MiB, 49, 1125 MHz, 37.78 W\nNVIDIA GeForce RTX 3090, GPU-868c67e2-83b5-a202-2686-77c7402cec07, 70 %, 12173 MiB, 43, 1980 MHz, 258.09 W",
+        "returncode": 0,
+        "compute_processes": "952394, GPU-ab4ed20a-c3c1-b648-84d3-ca42cf3b352b, 82 MiB\n2324705, GPU-ab4ed20a-c3c1-b648-84d3-ca42cf3b352b, 101 MiB\n2358510, GPU-868c67e2-83b5-a202-2686-77c7402cec07, 12148 MiB",
+        "benchmark_pid": 2358510,
+        "loadavg": [
+          1.2783203125,
+          1.14453125,
+          0.9794921875
+        ]
+      }
+    },
+    {
+      "scope": "infer_action_20_steps",
+      "outputs_bitwise_equal": true,
+      "cpu_and_cuda_rng_equal": true,
+      "median_wall_ms": {
+        "original": 439.03609449625947,
+        "optimized": 436.6816914989613
+      },
+      "median_cuda_ms": {
+        "original": 439.0154113769531,
+        "optimized": 436.6618347167969
+      },
+      "paired_median_time_change_percent": -0.44018216325702464,
+      "paired_median_time_change_95ci": [
+        -0.7650712844513796,
+        -0.27857798409353096
+      ],
+      "order_strata_median_percent": {
+        "0": -0.4589328219065991,
+        "1": -0.44018216325702464
+      },
+      "faster_pairs": 44,
+      "raw_pairs": [
+        {
+          "pair": 0,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 439.498795021791,
+          "original_cuda_ms": 439.4460144042969,
+          "optimized_wall_ms": 437.1504269656725,
+          "optimized_cuda_ms": 437.1306457519531
+        },
+        {
+          "pair": 1,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 433.97098197601736,
+          "optimized_cuda_ms": 433.9518127441406,
+          "original_wall_ms": 437.32565297978,
+          "original_cuda_ms": 437.30609130859375
+        },
+        {
+          "pair": 2,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 433.7460839888081,
+          "original_cuda_ms": 433.7283020019531,
+          "optimized_wall_ms": 431.96752498624846,
+          "optimized_cuda_ms": 431.9490661621094
+        },
+        {
+          "pair": 3,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 430.9080839739181,
+          "optimized_cuda_ms": 430.8917541503906,
+          "original_wall_ms": 434.23025496304035,
+          "original_cuda_ms": 434.21063232421875
+        },
+        {
+          "pair": 4,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 434.80491399532184,
+          "original_cuda_ms": 434.7837829589844,
+          "optimized_wall_ms": 443.25163000030443,
+          "optimized_cuda_ms": 443.2313537597656
+        },
+        {
+          "pair": 5,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 441.1861270200461,
+          "optimized_cuda_ms": 441.1667785644531,
+          "original_wall_ms": 435.58890296844766,
+          "original_cuda_ms": 435.569091796875
+        },
+        {
+          "pair": 6,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 435.48806599574164,
+          "original_cuda_ms": 435.46856689453125,
+          "optimized_wall_ms": 432.3176879552193,
+          "optimized_cuda_ms": 432.2987060546875
+        },
+        {
+          "pair": 7,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 450.2782030031085,
+          "optimized_cuda_ms": 450.2586364746094,
+          "original_wall_ms": 451.32283703424037,
+          "original_cuda_ms": 451.3028259277344
+        },
+        {
+          "pair": 8,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 436.4859740016982,
+          "original_cuda_ms": 436.4671936035156,
+          "optimized_wall_ms": 432.25989100756124,
+          "optimized_cuda_ms": 432.23828125
+        },
+        {
+          "pair": 9,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 441.816792008467,
+          "optimized_cuda_ms": 441.7912902832031,
+          "original_wall_ms": 443.7316140392795,
+          "original_cuda_ms": 443.712646484375
+        },
+        {
+          "pair": 10,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 436.91563297761604,
+          "original_cuda_ms": 436.8970031738281,
+          "optimized_wall_ms": 432.50823399284855,
+          "optimized_cuda_ms": 432.4901428222656
+        },
+        {
+          "pair": 11,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 434.65896503767,
+          "optimized_cuda_ms": 434.6393737792969,
+          "original_wall_ms": 437.92894994840026,
+          "original_cuda_ms": 437.9101867675781
+        },
+        {
+          "pair": 12,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 438.0712439888157,
+          "original_cuda_ms": 438.0522766113281,
+          "optimized_wall_ms": 436.61959399469197,
+          "optimized_cuda_ms": 436.59912109375
+        },
+        {
+          "pair": 13,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 433.9455189765431,
+          "optimized_cuda_ms": 433.9267883300781,
+          "original_wall_ms": 444.792750000488,
+          "original_cuda_ms": 444.7727355957031
+        },
+        {
+          "pair": 14,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 445.0788730173372,
+          "original_cuda_ms": 445.0593566894531,
+          "optimized_wall_ms": 436.58522999612615,
+          "optimized_cuda_ms": 436.5660095214844
+        },
+        {
+          "pair": 15,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 432.60215100599453,
+          "optimized_cuda_ms": 432.58380126953125,
+          "original_wall_ms": 434.67131996294484,
+          "original_cuda_ms": 434.6522521972656
+        },
+        {
+          "pair": 16,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 438.58614400960505,
+          "original_cuda_ms": 438.5581970214844,
+          "optimized_wall_ms": 437.0835790177807,
+          "optimized_cuda_ms": 437.06280517578125
+        },
+        {
+          "pair": 17,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 432.0831859949976,
+          "optimized_cuda_ms": 432.0588073730469,
+          "original_wall_ms": 433.5564959910698,
+          "original_cuda_ms": 433.5375671386719
+        },
+        {
+          "pair": 18,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 444.2927819909528,
+          "original_cuda_ms": 444.2735595703125,
+          "optimized_wall_ms": 448.73222103342414,
+          "optimized_cuda_ms": 448.71221923828125
+        },
+        {
+          "pair": 19,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 436.1617949907668,
+          "optimized_cuda_ms": 436.1423645019531,
+          "original_wall_ms": 440.1460979715921,
+          "original_cuda_ms": 440.1268615722656
+        },
+        {
+          "pair": 20,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 445.18844899721444,
+          "original_cuda_ms": 445.168212890625,
+          "optimized_wall_ms": 437.645434984006,
+          "optimized_cuda_ms": 437.6259765625
+        },
+        {
+          "pair": 21,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 437.25167302181944,
+          "optimized_cuda_ms": 437.2320251464844,
+          "original_wall_ms": 435.61925599351525,
+          "original_cuda_ms": 435.600830078125
+        },
+        {
+          "pair": 22,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 441.29767100093886,
+          "original_cuda_ms": 441.2771911621094,
+          "optimized_wall_ms": 441.61128503037617,
+          "optimized_cuda_ms": 441.5912780761719
+        },
+        {
+          "pair": 23,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 442.2159700188786,
+          "optimized_cuda_ms": 442.19732666015625,
+          "original_wall_ms": 439.41293499665335,
+          "original_cuda_ms": 439.39385986328125
+        },
+        {
+          "pair": 24,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 436.9954069843516,
+          "original_cuda_ms": 436.9761962890625,
+          "optimized_wall_ms": 434.7762590041384,
+          "optimized_cuda_ms": 434.75823974609375
+        },
+        {
+          "pair": 25,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 435.2179309935309,
+          "optimized_cuda_ms": 435.1889953613281,
+          "original_wall_ms": 439.9939569993876,
+          "original_cuda_ms": 439.97509765625
+        },
+        {
+          "pair": 26,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 437.0087429997511,
+          "original_cuda_ms": 436.98968505859375,
+          "optimized_wall_ms": 439.9414000217803,
+          "optimized_cuda_ms": 439.92095947265625
+        },
+        {
+          "pair": 27,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 442.47209798777476,
+          "optimized_cuda_ms": 442.4530334472656,
+          "original_wall_ms": 442.56707502063364,
+          "original_cuda_ms": 442.54803466796875
+        },
+        {
+          "pair": 28,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 439.86299401149154,
+          "original_cuda_ms": 439.8426818847656,
+          "optimized_wall_ms": 433.06179001228884,
+          "optimized_cuda_ms": 433.0428161621094
+        },
+        {
+          "pair": 29,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 432.82136297784746,
+          "optimized_cuda_ms": 432.8030700683594,
+          "original_wall_ms": 439.13243600400165,
+          "original_cuda_ms": 439.1122131347656
+        },
+        {
+          "pair": 30,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 441.517703991849,
+          "original_cuda_ms": 441.4975891113281,
+          "optimized_wall_ms": 438.0745179951191,
+          "optimized_cuda_ms": 438.05621337890625
+        },
+        {
+          "pair": 31,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 437.6964140101336,
+          "optimized_cuda_ms": 437.67694091796875,
+          "original_wall_ms": 445.6958470400423,
+          "original_cuda_ms": 445.6766052246094
+        },
+        {
+          "pair": 32,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 441.62197795230895,
+          "original_cuda_ms": 441.6019287109375,
+          "optimized_wall_ms": 444.31365601485595,
+          "optimized_cuda_ms": 444.29351806640625
+        },
+        {
+          "pair": 33,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 436.97578395949677,
+          "optimized_cuda_ms": 436.95648193359375,
+          "original_wall_ms": 435.16539596021175,
+          "original_cuda_ms": 435.1455383300781
+        },
+        {
+          "pair": 34,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 433.486903028097,
+          "original_cuda_ms": 433.46282958984375,
+          "optimized_wall_ms": 430.6605950114317,
+          "optimized_cuda_ms": 430.64276123046875
+        },
+        {
+          "pair": 35,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 430.52506301319227,
+          "optimized_cuda_ms": 430.5102844238281,
+          "original_wall_ms": 441.5905399946496,
+          "original_cuda_ms": 441.5700378417969
+        },
+        {
+          "pair": 36,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 444.68484801473096,
+          "original_cuda_ms": 444.66473388671875,
+          "optimized_wall_ms": 440.38142199860886,
+          "optimized_cuda_ms": 440.36083984375
+        },
+        {
+          "pair": 37,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 435.30352402012795,
+          "optimized_cuda_ms": 435.28057861328125,
+          "original_wall_ms": 435.35249604610726,
+          "original_cuda_ms": 435.3323974609375
+        },
+        {
+          "pair": 38,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 434.2568980064243,
+          "original_cuda_ms": 434.2384033203125,
+          "optimized_wall_ms": 433.7536210077815,
+          "optimized_cuda_ms": 433.73358154296875
+        },
+        {
+          "pair": 39,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 436.09187100082636,
+          "optimized_cuda_ms": 436.072509765625,
+          "original_wall_ms": 440.0583920069039,
+          "original_cuda_ms": 440.0389404296875
+        },
+        {
+          "pair": 40,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 434.94828400434926,
+          "original_cuda_ms": 434.92913818359375,
+          "optimized_wall_ms": 441.8486019712873,
+          "optimized_cuda_ms": 441.8282775878906
+        },
+        {
+          "pair": 41,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 444.3218039814383,
+          "optimized_cuda_ms": 444.3010559082031,
+          "original_wall_ms": 439.75503800902516,
+          "original_cuda_ms": 439.73638916015625
+        },
+        {
+          "pair": 42,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 436.4330979879014,
+          "original_cuda_ms": 436.4137878417969,
+          "optimized_wall_ms": 431.9790209992789,
+          "optimized_cuda_ms": 431.965087890625
+        },
+        {
+          "pair": 43,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 432.6180899515748,
+          "optimized_cuda_ms": 432.5990905761719,
+          "original_wall_ms": 438.7306229909882,
+          "original_cuda_ms": 438.7112731933594
+        },
+        {
+          "pair": 44,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 438.633581972681,
+          "original_cuda_ms": 438.6150207519531,
+          "optimized_wall_ms": 434.7481839940883,
+          "optimized_cuda_ms": 434.7287902832031
+        },
+        {
+          "pair": 45,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 456.19627804262564,
+          "optimized_cuda_ms": 456.1745300292969,
+          "original_wall_ms": 452.3435299634002,
+          "original_cuda_ms": 452.32373046875
+        },
+        {
+          "pair": 46,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 441.1888070171699,
+          "original_cuda_ms": 441.1697998046875,
+          "optimized_wall_ms": 436.4491190062836,
+          "optimized_cuda_ms": 436.4299621582031
+        },
+        {
+          "pair": 47,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 434.5523600350134,
+          "optimized_cuda_ms": 434.5329284667969,
+          "original_wall_ms": 435.7663090340793,
+          "original_cuda_ms": 435.7470397949219
+        },
+        {
+          "pair": 48,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 438.9397529885173,
+          "original_cuda_ms": 438.9186096191406,
+          "optimized_wall_ms": 438.42478498118,
+          "optimized_cuda_ms": 438.4047546386719
+        },
+        {
+          "pair": 49,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 433.16260597202927,
+          "optimized_cuda_ms": 433.1441650390625,
+          "original_wall_ms": 451.3148170080967,
+          "original_cuda_ms": 451.2950439453125
+        },
+        {
+          "pair": 50,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 445.77149499673396,
+          "original_cuda_ms": 445.75103759765625,
+          "optimized_wall_ms": 438.34416597383097,
+          "optimized_cuda_ms": 438.3224792480469
+        },
+        {
+          "pair": 51,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 436.74378900323063,
+          "optimized_cuda_ms": 436.72454833984375,
+          "original_wall_ms": 435.48119999468327,
+          "original_cuda_ms": 435.4658508300781
+        },
+        {
+          "pair": 52,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 436.75489898305386,
+          "original_cuda_ms": 436.7362060546875,
+          "optimized_wall_ms": 441.32845901185647,
+          "optimized_cuda_ms": 441.3093566894531
+        },
+        {
+          "pair": 53,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 435.7245329883881,
+          "optimized_cuda_ms": 435.7059631347656,
+          "original_wall_ms": 434.45212597725913,
+          "original_cuda_ms": 434.4332580566406
+        },
+        {
+          "pair": 54,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 445.47243998385966,
+          "original_cuda_ms": 445.45208740234375,
+          "optimized_wall_ms": 444.1718400339596,
+          "optimized_cuda_ms": 444.1522521972656
+        },
+        {
+          "pair": 55,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 437.46734701562673,
+          "optimized_cuda_ms": 437.44830322265625,
+          "original_wall_ms": 439.14827302796766,
+          "original_cuda_ms": 439.1286315917969
+        },
+        {
+          "pair": 56,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 434.5187610015273,
+          "original_cuda_ms": 434.5006408691406,
+          "optimized_wall_ms": 433.5361120174639,
+          "optimized_cuda_ms": 433.5168151855469
+        },
+        {
+          "pair": 57,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 439.5891950116493,
+          "optimized_cuda_ms": 439.5690612792969,
+          "original_wall_ms": 449.2147440323606,
+          "original_cuda_ms": 449.1830139160156
+        },
+        {
+          "pair": 58,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 445.2148519922048,
+          "original_cuda_ms": 445.1954345703125,
+          "optimized_wall_ms": 445.8542110514827,
+          "optimized_cuda_ms": 445.83477783203125
+        },
+        {
+          "pair": 59,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 441.6761390166357,
+          "optimized_cuda_ms": 441.6553039550781,
+          "original_wall_ms": 443.66748398169875,
+          "original_cuda_ms": 443.6473388671875
+        }
+      ],
+      "peak_allocated_bytes": 12290370048,
+      "peak_reserved_bytes": 12406751232,
+      "activity_before": {
+        "gpus": "NVIDIA GeForce RTX 3070, GPU-ab4ed20a-c3c1-b648-84d3-ca42cf3b352b, 5 %, 1500 MiB, 51, 1815 MHz, 51.90 W\nNVIDIA GeForce RTX 3090, GPU-868c67e2-83b5-a202-2686-77c7402cec07, 71 %, 12173 MiB, 43, 1980 MHz, 241.20 W",
+        "returncode": 0,
+        "compute_processes": "952394, GPU-ab4ed20a-c3c1-b648-84d3-ca42cf3b352b, 82 MiB\n2324705, GPU-ab4ed20a-c3c1-b648-84d3-ca42cf3b352b, 101 MiB\n2358510, GPU-868c67e2-83b5-a202-2686-77c7402cec07, 12148 MiB",
+        "benchmark_pid": 2358510,
+        "loadavg": [
+          1.2353515625,
+          1.1396484375,
+          0.98046875
+        ]
+      },
+      "activity_after": {
+        "gpus": "NVIDIA GeForce RTX 3070, GPU-ab4ed20a-c3c1-b648-84d3-ca42cf3b352b, 9 %, 1491 MiB, 51, 1815 MHz, 55.04 W\nNVIDIA GeForce RTX 3090, GPU-868c67e2-83b5-a202-2686-77c7402cec07, 71 %, 12173 MiB, 47, 1965 MHz, 240.16 W",
+        "returncode": 0,
+        "compute_processes": "952394, GPU-ab4ed20a-c3c1-b648-84d3-ca42cf3b352b, 82 MiB\n2324705, GPU-ab4ed20a-c3c1-b648-84d3-ca42cf3b352b, 101 MiB\n2358510, GPU-868c67e2-83b5-a202-2686-77c7402cec07, 12148 MiB",
+        "benchmark_pid": 2358510,
+        "loadavg": [
+          1.28125,
+          1.16455078125,
+          1.00048828125
+        ]
+      }
+    }
+  ],
+  "settings": {
+    "video_hidden": 3072,
+    "action_hidden": 1024,
+    "video_ffn": 14336,
+    "action_ffn": 4096,
+    "layers": 30,
+    "heads": 24,
+    "head_dim": 128,
+    "text_dim": 4096,
+    "context_length": 128,
+    "seed": 2731,
+    "device": "cuda:0",
+    "steps": [
+      10,
+      20
+    ],
+    "warmup": 12,
+    "repeats": 60,
+    "output": "docs/benchmarks/rift-inference-tail-20261019/full_architecture3090.json",
+    "batch_size": 1
+  },
+  "scope": "Native RIFT architecture with random interpolated weights; real BF16 CUDA inference. Resident first-frame latents and precomputed text context exclude VAE/text encoding; no task-quality evaluation.",
+  "device_name": "NVIDIA GeForce RTX 3090",
+  "fixture": {
+    "synthetic": true,
+    "pretrained_weights_loaded": false,
+    "initialization": "native_random_video_interpolated_action_backbone_with_alpha",
+    "configuration": {
+      "video_hidden": 3072,
+      "action_hidden": 1024,
+      "video_ffn": 14336,
+      "action_ffn": 4096,
+      "layers": 30,
+      "heads": 24,
+      "head_dim": 128,
+      "text_dim": 4096,
+      "context_length": 128,
+      "seed": 2731,
+      "batch_size": 1
+    },
+    "video_latent_shape": [
+      1,
+      48,
+      3,
+      14,
+      28
+    ],
+    "action_shape": [
+      1,
+      32,
+      7
+    ],
+    "future_tokens": 196,
+    "fm_width": 512,
+    "fm_blocks": 2,
+    "gradient_checkpointing": true,
+    "probe_head_enabled": true,
+    "curriculum_step": 21700,
+    "vae_encoding_included": false,
+    "data_loading_included": false
+  },
+  "parameters": 6030309959,
+  "execution": {
+    "model_eval": true,
+    "gradient_enabled": false,
+    "optimizer_present": false,
+    "checkpoint_recomputation": false,
+    "diagnostic_probe_used": false,
+    "future_fm_head_used": false
+  },
+  "execution_metadata_note": "Explicit scope labels added after measurement; no timings or numerical results changed."
+}

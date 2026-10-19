@@ -27,6 +27,7 @@ class MoT(nn.Module):
         self.expert_order = list(self.mixtures.keys())
         self.mot_checkpoint_mixed_attn = mot_checkpoint_mixed_attn
         self.compile_training_layers = False
+        self.optimize_video_prefill = True
         if mot_checkpoint_mixed_attn:
             logger.info("Using gradient checkpointing for mixture attention. This will save memory but use more computation.")
 
@@ -265,6 +266,11 @@ class MoT(nn.Module):
     ) -> list[dict[str, torch.Tensor]]:
         """Prefill video branch once and cache per-layer K/V for action denoising.
 
+        In no-grad evaluation, only K/V are needed from the final video layer.
+        They are projected from that layer's input; its updated video tokens
+        are not returned or read by any later layer. Training and grad-enabled
+        calls retain the complete original prefill path.
+
         Args:
             video_tokens: Video tokens before layer 0, shape [B, Sv, D].
             video_freqs: Video RoPE frequencies, shape [Sv, 1, rope_dim].
@@ -299,8 +305,17 @@ class MoT(nn.Module):
         expert = self.mixtures["video"]
         x = video_tokens
         kv_cache: list[dict[str, torch.Tensor]] = []
+        optimize = self.optimize_video_prefill and not self.training and not torch.is_grad_enabled()
         for layer_idx in range(self.num_layers):
             block = expert.blocks[layer_idx]
+            if optimize and layer_idx == self.num_layers - 1:
+                shift_msa, scale_msa, *_ = self._split_modulation(block, video_t_mod)
+                attn_input = modulate(block.norm1(x), shift_msa, scale_msa)
+                k = block.self_attn.norm_k(block.self_attn.k(attn_input))
+                v = block.self_attn.v(attn_input)
+                k = rope_apply(k, video_freqs, block.num_heads)
+                kv_cache.append({"k": k, "v": v})
+                break
             # Build video Q/K/V from current layer input tokens.
             (
                 q,

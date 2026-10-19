@@ -1,0 +1,612 @@
+{
+  "created_utc": "2026-10-19T00:51:45.839342+00:00",
+  "torch_version": "2.7.1+cu128",
+  "status": "complete",
+  "cases": [
+    {
+      "scope": "video_prefill",
+      "outputs_bitwise_equal": true,
+      "cpu_and_cuda_rng_equal": true,
+      "median_wall_ms": {
+        "original": 8.429135486949235,
+        "optimized": 7.664192991796881
+      },
+      "median_cuda_ms": {
+        "original": 8.414720058441162,
+        "optimized": 7.648207902908325
+      },
+      "paired_median_time_change_percent": -9.14114516995091,
+      "paired_median_time_change_95ci": [
+        -10.1915187044909,
+        -8.918986000434032
+      ],
+      "order_strata_median_percent": {
+        "0": -9.14114516995091,
+        "1": -9.115242318380052
+      },
+      "faster_pairs": 12,
+      "raw_pairs": [
+        {
+          "pair": 0,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 8.974264957942069,
+          "original_cuda_ms": 8.91494369506836,
+          "optimized_wall_ms": 7.712777995038778,
+          "optimized_cuda_ms": 7.698431968688965
+        },
+        {
+          "pair": 1,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 7.705984986387193,
+          "optimized_cuda_ms": 7.672832012176514,
+          "original_wall_ms": 8.817713998723775,
+          "original_cuda_ms": 8.775456428527832
+        },
+        {
+          "pair": 2,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 8.447205007541925,
+          "original_cuda_ms": 8.42956829071045,
+          "optimized_wall_ms": 7.69679801305756,
+          "optimized_cuda_ms": 7.679872035980225
+        },
+        {
+          "pair": 3,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 7.670349965337664,
+          "optimized_cuda_ms": 7.657279968261719,
+          "original_wall_ms": 8.424972998909652,
+          "original_cuda_ms": 8.409088134765625
+        },
+        {
+          "pair": 4,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 8.433297974988818,
+          "original_cuda_ms": 8.4203519821167,
+          "optimized_wall_ms": 7.642587996087968,
+          "optimized_cuda_ms": 7.629536151885986
+        },
+        {
+          "pair": 5,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 7.6386010041460395,
+          "optimized_cuda_ms": 7.625728130340576,
+          "original_wall_ms": 8.419371966738254,
+          "original_cuda_ms": 8.406111717224121
+        },
+        {
+          "pair": 6,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 8.418951998464763,
+          "original_cuda_ms": 8.40499210357666,
+          "optimized_wall_ms": 7.6442810241132975,
+          "optimized_cuda_ms": 7.627647876739502
+        },
+        {
+          "pair": 7,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 7.868457003496587,
+          "optimized_cuda_ms": 7.849696159362793,
+          "original_wall_ms": 8.453347021713853,
+          "original_cuda_ms": 8.437760353088379
+        },
+        {
+          "pair": 8,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 8.434830990154296,
+          "original_cuda_ms": 8.4203519821167,
+          "optimized_wall_ms": 7.679535949137062,
+          "optimized_cuda_ms": 7.660319805145264
+        },
+        {
+          "pair": 9,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 7.658036018256098,
+          "optimized_cuda_ms": 7.639135837554932,
+          "original_wall_ms": 7.897522009443492,
+          "original_cuda_ms": 7.884768009185791
+        },
+        {
+          "pair": 10,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 7.749005977530032,
+          "original_cuda_ms": 7.7363200187683105,
+          "optimized_wall_ms": 7.045336009468883,
+          "optimized_cuda_ms": 7.031775951385498
+        },
+        {
+          "pair": 11,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 7.086863974109292,
+          "optimized_cuda_ms": 7.0655999183654785,
+          "original_wall_ms": 7.963393989484757,
+          "original_cuda_ms": 7.9482879638671875
+        }
+      ],
+      "peak_allocated_bytes": 1040938496,
+      "peak_reserved_bytes": 1073741824,
+      "activity_before": {
+        "gpus": "NVIDIA GeForce RTX 3070, GPU-ab4ed20a-c3c1-b648-84d3-ca42cf3b352b, 3 %, 1530 MiB, 48, 1005 MHz, 23.10 W\nNVIDIA GeForce RTX 3090, GPU-868c67e2-83b5-a202-2686-77c7402cec07, 66 %, 1365 MiB, 32, 1755 MHz, 62.78 W",
+        "returncode": 0,
+        "compute_processes": "952394, GPU-ab4ed20a-c3c1-b648-84d3-ca42cf3b352b, 82 MiB\n2324705, GPU-ab4ed20a-c3c1-b648-84d3-ca42cf3b352b, 101 MiB\n2357799, GPU-868c67e2-83b5-a202-2686-77c7402cec07, 1340 MiB",
+        "benchmark_pid": 2357799,
+        "loadavg": [
+          1.349609375,
+          1.0615234375,
+          0.92529296875
+        ]
+      },
+      "activity_after": {
+        "gpus": "NVIDIA GeForce RTX 3070, GPU-ab4ed20a-c3c1-b648-84d3-ca42cf3b352b, 32 %, 1530 MiB, 48, 1005 MHz, 24.10 W\nNVIDIA GeForce RTX 3090, GPU-868c67e2-83b5-a202-2686-77c7402cec07, 98 %, 1365 MiB, 35, 1995 MHz, 124.91 W",
+        "returncode": 0,
+        "compute_processes": "952394, GPU-ab4ed20a-c3c1-b648-84d3-ca42cf3b352b, 82 MiB\n2324705, GPU-ab4ed20a-c3c1-b648-84d3-ca42cf3b352b, 101 MiB\n2357799, GPU-868c67e2-83b5-a202-2686-77c7402cec07, 1340 MiB",
+        "benchmark_pid": 2357799,
+        "loadavg": [
+          1.349609375,
+          1.0615234375,
+          0.92529296875
+        ]
+      }
+    },
+    {
+      "scope": "infer_action_10_steps",
+      "outputs_bitwise_equal": true,
+      "cpu_and_cuda_rng_equal": true,
+      "median_wall_ms": {
+        "original": 66.40476448228583,
+        "optimized": 66.36891749803908
+      },
+      "median_cuda_ms": {
+        "original": 66.3807373046875,
+        "optimized": 66.34600067138672
+      },
+      "paired_median_time_change_percent": -0.5131231516286638,
+      "paired_median_time_change_95ci": [
+        -1.2025240618544486,
+        0.2593124002771896
+      ],
+      "order_strata_median_percent": {
+        "0": -0.2801158364412193,
+        "1": -0.7478787786234897
+      },
+      "faster_pairs": 8,
+      "raw_pairs": [
+        {
+          "pair": 0,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 67.14414001908153,
+          "original_cuda_ms": 67.07568359375,
+          "optimized_wall_ms": 64.80373599333689,
+          "optimized_cuda_ms": 64.7824935913086
+        },
+        {
+          "pair": 1,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 64.41813899436966,
+          "optimized_cuda_ms": 64.39593505859375,
+          "original_wall_ms": 64.93587198201567,
+          "original_cuda_ms": 64.91407775878906
+        },
+        {
+          "pair": 2,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 64.8719429736957,
+          "original_cuda_ms": 64.84989166259766,
+          "optimized_wall_ms": 64.72115201177076,
+          "optimized_cuda_ms": 64.69913482666016
+        },
+        {
+          "pair": 3,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 64.78741602040827,
+          "optimized_cuda_ms": 64.76131439208984,
+          "original_wall_ms": 64.4692939822562,
+          "original_cuda_ms": 64.44627380371094
+        },
+        {
+          "pair": 4,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 65.80384698463604,
+          "original_cuda_ms": 65.78157043457031,
+          "optimized_wall_ms": 64.85786696430296,
+          "optimized_cuda_ms": 64.8353271484375
+        },
+        {
+          "pair": 5,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 66.4530840003863,
+          "optimized_cuda_ms": 66.43046569824219,
+          "original_wall_ms": 65.72192400926724,
+          "original_cuda_ms": 65.69983673095703
+        },
+        {
+          "pair": 6,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 66.7960230493918,
+          "original_cuda_ms": 66.7721939086914,
+          "optimized_wall_ms": 66.57707394333556,
+          "optimized_cuda_ms": 66.55145263671875
+        },
+        {
+          "pair": 7,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 66.28475099569187,
+          "optimized_cuda_ms": 66.26153564453125,
+          "original_wall_ms": 66.75097899278626,
+          "original_cuda_ms": 66.7279052734375
+        },
+        {
+          "pair": 8,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 66.0585499717854,
+          "original_cuda_ms": 66.0335693359375,
+          "optimized_wall_ms": 67.15612200787291,
+          "optimized_cuda_ms": 67.13308715820312
+        },
+        {
+          "pair": 9,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 66.88932597171515,
+          "optimized_cuda_ms": 66.86531066894531,
+          "original_wall_ms": 68.15343699418008,
+          "original_cuda_ms": 68.12815856933594
+        },
+        {
+          "pair": 10,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 66.89340295270085,
+          "original_cuda_ms": 66.86953735351562,
+          "optimized_wall_ms": 66.9102449901402,
+          "optimized_cuda_ms": 66.88617706298828
+        },
+        {
+          "pair": 11,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 66.98341097217053,
+          "optimized_cuda_ms": 66.95897674560547,
+          "original_wall_ms": 67.63778801541775,
+          "original_cuda_ms": 67.61357116699219
+        }
+      ],
+      "peak_allocated_bytes": 1050165248,
+      "peak_reserved_bytes": 1094713344,
+      "activity_before": {
+        "gpus": "NVIDIA GeForce RTX 3070, GPU-ab4ed20a-c3c1-b648-84d3-ca42cf3b352b, 21 %, 1530 MiB, 48, 750 MHz, 26.30 W\nNVIDIA GeForce RTX 3090, GPU-868c67e2-83b5-a202-2686-77c7402cec07, 49 %, 1385 MiB, 34, 1995 MHz, 187.86 W",
+        "returncode": 0,
+        "compute_processes": "952394, GPU-ab4ed20a-c3c1-b648-84d3-ca42cf3b352b, 82 MiB\n2324705, GPU-ab4ed20a-c3c1-b648-84d3-ca42cf3b352b, 101 MiB\n2357799, GPU-868c67e2-83b5-a202-2686-77c7402cec07, 1360 MiB",
+        "benchmark_pid": 2357799,
+        "loadavg": [
+          1.349609375,
+          1.0615234375,
+          0.92529296875
+        ]
+      },
+      "activity_after": {
+        "gpus": "NVIDIA GeForce RTX 3070, GPU-ab4ed20a-c3c1-b648-84d3-ca42cf3b352b, 45 %, 1530 MiB, 48, 750 MHz, 26.50 W\nNVIDIA GeForce RTX 3090, GPU-868c67e2-83b5-a202-2686-77c7402cec07, 42 %, 1385 MiB, 35, 1995 MHz, 186.38 W",
+        "returncode": 0,
+        "compute_processes": "952394, GPU-ab4ed20a-c3c1-b648-84d3-ca42cf3b352b, 82 MiB\n2324705, GPU-ab4ed20a-c3c1-b648-84d3-ca42cf3b352b, 101 MiB\n2357799, GPU-868c67e2-83b5-a202-2686-77c7402cec07, 1360 MiB",
+        "benchmark_pid": 2357799,
+        "loadavg": [
+          1.48193359375,
+          1.09375,
+          0.9365234375
+        ]
+      }
+    },
+    {
+      "scope": "infer_action_20_steps",
+      "outputs_bitwise_equal": true,
+      "cpu_and_cuda_rng_equal": true,
+      "median_wall_ms": {
+        "original": 121.89372201100923,
+        "optimized": 121.41885398887098
+      },
+      "median_cuda_ms": {
+        "original": 121.87223815917969,
+        "optimized": 121.39716720581055
+      },
+      "paired_median_time_change_percent": -0.45585576393166183,
+      "paired_median_time_change_95ci": [
+        -0.5363660657577929,
+        0.11350021463703008
+      ],
+      "order_strata_median_percent": {
+        "0": -0.5115433297376071,
+        "1": -0.22125376321961987
+      },
+      "faster_pairs": 8,
+      "raw_pairs": [
+        {
+          "pair": 0,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 122.9554379824549,
+          "original_cuda_ms": 122.9151382446289,
+          "optimized_wall_ms": 121.33085500681773,
+          "optimized_cuda_ms": 121.30982208251953
+        },
+        {
+          "pair": 1,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 121.2781670037657,
+          "optimized_cuda_ms": 121.25190734863281,
+          "original_wall_ms": 121.81985401548445,
+          "original_cuda_ms": 121.79759979248047
+        },
+        {
+          "pair": 2,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 121.62005301797763,
+          "original_cuda_ms": 121.59423828125,
+          "optimized_wall_ms": 121.04232801357284,
+          "optimized_cuda_ms": 121.0216293334961
+        },
+        {
+          "pair": 3,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 120.98182598128915,
+          "optimized_cuda_ms": 120.96089935302734,
+          "original_wall_ms": 121.54952203854918,
+          "original_cuda_ms": 121.52828979492188
+        },
+        {
+          "pair": 4,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 121.79991800803691,
+          "original_cuda_ms": 121.77967834472656,
+          "optimized_wall_ms": 121.49263598257676,
+          "optimized_cuda_ms": 121.47138977050781
+        },
+        {
+          "pair": 5,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 121.3450719951652,
+          "optimized_cuda_ms": 121.32294464111328,
+          "original_wall_ms": 121.07284500962123,
+          "original_cuda_ms": 121.05363464355469
+        },
+        {
+          "pair": 6,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 122.0170310116373,
+          "original_cuda_ms": 121.99708557128906,
+          "optimized_wall_ms": 123.51539899827912,
+          "optimized_cuda_ms": 123.49549102783203
+        },
+        {
+          "pair": 7,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 124.43222396541387,
+          "optimized_cuda_ms": 124.41200256347656,
+          "original_wall_ms": 121.90719699719921,
+          "original_cuda_ms": 121.88505554199219
+        },
+        {
+          "pair": 8,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 122.3945040255785,
+          "original_cuda_ms": 122.37232208251953,
+          "optimized_wall_ms": 121.72370601911098,
+          "optimized_cuda_ms": 121.70342254638672
+        },
+        {
+          "pair": 9,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 122.2898990381509,
+          "optimized_cuda_ms": 122.2679672241211,
+          "original_wall_ms": 122.28726397734135,
+          "original_cuda_ms": 122.26428985595703
+        },
+        {
+          "pair": 10,
+          "order": [
+            0,
+            1
+          ],
+          "original_wall_ms": 123.52543801534921,
+          "original_cuda_ms": 123.50428771972656,
+          "optimized_wall_ms": 121.75278103677556,
+          "optimized_cuda_ms": 121.73129272460938
+        },
+        {
+          "pair": 11,
+          "order": [
+            1,
+            0
+          ],
+          "optimized_wall_ms": 121.24077801126987,
+          "optimized_cuda_ms": 121.22003173828125,
+          "original_wall_ms": 121.88024702481925,
+          "original_cuda_ms": 121.85942077636719
+        }
+      ],
+      "peak_allocated_bytes": 1050165248,
+      "peak_reserved_bytes": 1094713344,
+      "activity_before": {
+        "gpus": "NVIDIA GeForce RTX 3070, GPU-ab4ed20a-c3c1-b648-84d3-ca42cf3b352b, 15 %, 1529 MiB, 47, 840 MHz, 22.92 W\nNVIDIA GeForce RTX 3090, GPU-868c67e2-83b5-a202-2686-77c7402cec07, 47 %, 1385 MiB, 35, 1995 MHz, 178.93 W",
+        "returncode": 0,
+        "compute_processes": "952394, GPU-ab4ed20a-c3c1-b648-84d3-ca42cf3b352b, 82 MiB\n2324705, GPU-ab4ed20a-c3c1-b648-84d3-ca42cf3b352b, 101 MiB\n2357799, GPU-868c67e2-83b5-a202-2686-77c7402cec07, 1360 MiB",
+        "benchmark_pid": 2357799,
+        "loadavg": [
+          1.48193359375,
+          1.09375,
+          0.9365234375
+        ]
+      },
+      "activity_after": {
+        "gpus": "NVIDIA GeForce RTX 3070, GPU-ab4ed20a-c3c1-b648-84d3-ca42cf3b352b, 3 %, 1530 MiB, 47, 780 MHz, 26.01 W\nNVIDIA GeForce RTX 3090, GPU-868c67e2-83b5-a202-2686-77c7402cec07, 47 %, 1385 MiB, 34, 1995 MHz, 178.31 W",
+        "returncode": 0,
+        "compute_processes": "952394, GPU-ab4ed20a-c3c1-b648-84d3-ca42cf3b352b, 82 MiB\n2324705, GPU-ab4ed20a-c3c1-b648-84d3-ca42cf3b352b, 101 MiB\n2357799, GPU-868c67e2-83b5-a202-2686-77c7402cec07, 1360 MiB",
+        "benchmark_pid": 2357799,
+        "loadavg": [
+          1.44287109375,
+          1.091796875,
+          0.93701171875
+        ]
+      }
+    }
+  ],
+  "settings": {
+    "video_hidden": 1536,
+    "action_hidden": 512,
+    "video_ffn": 7168,
+    "action_ffn": 2048,
+    "layers": 9,
+    "heads": 12,
+    "head_dim": 128,
+    "text_dim": 256,
+    "context_length": 128,
+    "seed": 2731,
+    "device": "cuda:0",
+    "steps": [
+      10,
+      20
+    ],
+    "warmup": 4,
+    "repeats": 12,
+    "output": "docs/benchmarks/rift-inference-tail-20261019/reduced_pilot.json",
+    "batch_size": 1
+  },
+  "scope": "Native RIFT architecture with random interpolated weights; real BF16 CUDA inference. Resident first-frame latents and precomputed text context exclude VAE/text encoding; no task-quality evaluation.",
+  "device_name": "NVIDIA GeForce RTX 3090",
+  "fixture": {
+    "synthetic": true,
+    "pretrained_weights_loaded": false,
+    "initialization": "native_random_video_interpolated_action_backbone_with_alpha",
+    "configuration": {
+      "video_hidden": 1536,
+      "action_hidden": 512,
+      "video_ffn": 7168,
+      "action_ffn": 2048,
+      "layers": 9,
+      "heads": 12,
+      "head_dim": 128,
+      "text_dim": 256,
+      "context_length": 128,
+      "seed": 2731,
+      "batch_size": 1
+    },
+    "video_latent_shape": [
+      1,
+      48,
+      3,
+      14,
+      28
+    ],
+    "action_shape": [
+      1,
+      32,
+      7
+    ],
+    "future_tokens": 196,
+    "fm_width": 512,
+    "fm_blocks": 2,
+    "gradient_checkpointing": true,
+    "probe_head_enabled": true,
+    "curriculum_step": 21700,
+    "vae_encoding_included": false,
+    "data_loading_included": false
+  },
+  "parameters": 474971975
+}

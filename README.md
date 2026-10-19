@@ -213,6 +213,13 @@ original execution and 6.43–6.50% against upstream compilation plus path fusio
 These results use a 475M-parameter synthetic fixture; cached-latent timings
 exclude online VAE encoding and do not establish full-5B throughput or task quality.
 
+Action inference also enables a final video-layer shortcut by default: retain
+the K/V read by the action expert and omit the unused visual query and output
+updates. It applies only to no-grad evaluation prefill; training and joint video
+generation retain their full paths. See the [full-size RTX 3090 inference test](docs/RIFT_INFERENCE_VIDEO_TAIL_20261019.md)
+for exact-output checks, measured latency, and scope. Set
+`model.mot.optimize_video_prefill = False` for the original prefill control.
+
 ## Benchmark evaluation
 
 ### LIBERO
