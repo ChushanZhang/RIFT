@@ -7,6 +7,7 @@ import re
 import numpy as np
 from .vae_latent_cache import identity_hash
 from .robotwin_episode_cache import EpisodeHeaderCache, load_window, LATENT_SHAPE
+from .robotwin_cache_reuse import load_catalog, payload_namespace
 
 CONTRACT='robotwin_3cam384_v1'
 CAMERAS=('cam_high','cam_left_wrist','cam_right_wrist')
@@ -52,9 +53,13 @@ class RobotwinIndexedVaeLatentReader:
             _require(settings.get(k)==v and report['preprocessing'].get(k)==v,f'RoboTwin preprocessing changed: {k}')
         _require(report['latent_shape']==list(LATENT_SHAPE) and report['latent_dtype']=='torch.bfloat16','Latent shape/dtype differs')
         self.namespace=report['namespace'];_require(re.fullmatch('[0-9a-f]{64}',self.namespace),'Invalid namespace')
-        self.directory=Path(cache_dir)/self.namespace
+        self.cache_root=Path(cache_dir)
+        self.directory=self.cache_root/self.namespace
         identity=_json(self.directory/'identity.json')
         _require(identity_hash(identity)==self.namespace and identity==report['identity'],'VAE identity differs')
+        self._reuse_catalog=load_catalog(run,self.cache_root,self.namespace,PREPROCESSING)
+        _require(report.get('reuse_sources_sha256')==settings.get('reuse_sources_sha256'),
+            'Reuse provenance differs from the published validation')
         for name,field in (('episodes.json','episodes_sha256'),('input_fingerprints.json','fingerprints_sha256'),
                            ('keys.bin','keys_sha256'),('packed_manifest.json','manifest_sha256')):
             _require(_sha(run/name)==report[field],f'Corrupt cache inventory: {name}')
@@ -79,6 +84,7 @@ class RobotwinIndexedVaeLatentReader:
             _require(m['dataset']==e['dataset']=='robotwin2.0' and m['episode_index']==ep
                 and m['windows']==e['length'] and m['key_offset']==offset and ep not in self._episodes,
                 'Invalid packed episode mapping')
+            payload_namespace(m,self.namespace,self._reuse_catalog)
             for p in [e['parquet_path'],*e['video_paths'].values()]:
                 st=Path(p).stat()
                 _require(fingerprints.get(p)==dict(size=st.st_size,mtime_ns=st.st_mtime_ns),f'Input changed: {p}')
@@ -97,8 +103,9 @@ class RobotwinIndexedVaeLatentReader:
     def load(self,dataset_index,episode_index,start_frame):
         entry=self._episodes[int(episode_index)]
         key=self.key(dataset_index,episode_index,start_frame)
-        path=self.directory/'episodes'/'robotwin2.0'/f'episode_{int(episode_index):06d}.safetensors'
-        return load_window(path,start_frame,key=key,namespace=self.namespace,dataset='robotwin2.0',
+        payload=payload_namespace(entry,self.namespace,self._reuse_catalog)
+        path=self.cache_root/payload/'episodes'/'robotwin2.0'/f'episode_{int(episode_index):06d}.safetensors'
+        return load_window(path,start_frame,key=key,namespace=payload,dataset='robotwin2.0',
             episode_index=int(episode_index),index_sha256=entry['index_sha256'],window_count=entry['windows'],header_cache=self._headers)
 
     def __getstate__(self):

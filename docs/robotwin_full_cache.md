@@ -23,6 +23,24 @@ Changing encoding settings requires a separate run directory. Existing complete
 episodes in the same run are validated and reused on restart. Per-worker file
 locks prevent duplicate writers.
 
+To retain completed sequential episodes while batching only the missing work,
+stop all workers and run:
+
+```bash
+python scripts/reuse_robotwin_cache.py --run-dir "$ROBOTWIN_RUN_DIR" \
+  --cache-dir "$ROBOTWIN_CACHE_DIR" --source-run "$OLD_ROBOTWIN_RUN" --workers 4
+```
+
+This checks matching frozen weights, scales, dtype, preprocessing and complete
+source inventories. Every selected existing file and every reused file passes
+its full payload/index checks before references are published. Already complete
+destination episodes take precedence. The source safetensors remain unchanged;
+only their index files are hardlinked and completion records retain the actual
+payload namespace and sequential encoding provenance. Missing windows are
+balanced independently across workers. Publication and the training reader
+validate these references and read each file from its original namespace.
+`reuse_report.json` records the retained, imported and remaining window counts.
+
 Run `init`, then `smoke`, then the worker ranks, and finally `publish`:
 
 ```bash

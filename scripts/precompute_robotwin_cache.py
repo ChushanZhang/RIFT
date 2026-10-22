@@ -23,6 +23,7 @@ from rift.utils.vae_latent_cache import frozen_vae_identity, identity_hash
 from robotwin_vae_inputs import discover_episodes, prepare_episode, make_window, validate_episode_inputs
 from rift.utils.vae_latent_cache import tensor_digest
 from rift.utils.robotwin_episode_cache import pack_episode, load_window, validate_header, LATENT_SHAPE
+from rift.utils.robotwin_cache_reuse import load_catalog, payload_namespace
 
 CONTRACT = 'robotwin_3cam384_v1'
 PREPROCESSING = dict(contract=CONTRACT, num_frames=33, video_offsets=list(range(0,33,4)),
@@ -207,10 +208,14 @@ def verify_done(args,e,namespace,fingerprints,read_payload=True):
         or done['dataset']!=e['dataset'] or done['index_sha256']!=hashlib.sha256(raw).hexdigest()
         or [r['start_frame'] for r in rows]!=list(range(e['length']))):
         raise RuntimeError(f'Invalid episode completion: {index}')
-    path=packed_path(args,namespace,e)
+    catalog = getattr(args, '_reuse_catalog', None)
+    if catalog is None:
+        catalog = args._reuse_catalog = load_catalog(args.run_dir,args.cache_dir,namespace,PREPROCESSING)
+    payload = payload_namespace(done,namespace,catalog)
+    path=packed_path(args,payload,e)
     if sha(path)!=done['packed_sha256']: raise RuntimeError(f'Corrupt packed episode: {path}')
     with safe_open(path,framework='pt',device='cpu') as h:
-        keys,checksums=validate_header(h,namespace=namespace,dataset=e['dataset'],episode_index=e['episode_index'],
+        keys,checksums=validate_header(h,namespace=payload,dataset=e['dataset'],episode_index=e['episode_index'],
             index_sha256=done['index_sha256'],window_count=e['length'])
         if list(keys)!=[r['key'] for r in rows]: raise RuntimeError('Packed/index keys differ')
         if read_payload:
@@ -218,6 +223,23 @@ def verify_done(args,e,namespace,fingerprints,read_payload=True):
             for t,digest in zip(latents,checksums):
                 if not torch.isfinite(t).all() or tensor_digest(t)!=digest: raise RuntimeError(f'Corrupt window: {path}')
     return done,keys
+
+
+def worker_episodes(args, episodes):
+    settings = json.loads((args.run_dir/'settings.json').read_text())
+    path = args.run_dir/'assignments.json'
+    if 'assignments_sha256' not in settings:
+        return assigned_episodes(episodes,args.world_size)[args.rank]
+    if sha(path) != settings['assignments_sha256']:
+        raise RuntimeError('Worker assignment checksum changed')
+    mapping = json.loads(path.read_text())
+    if mapping['world_size'] != args.world_size or mapping['episodes_sha256'] != settings['episodes_sha256']:
+        raise RuntimeError('Worker assignment inventory differs')
+    by_key = {(e['dataset'],e['episode_index']):e for e in episodes}
+    flattened = [tuple(key) for rank in mapping['assignments'] for key in rank]
+    if len(flattened) != len(by_key) or set(flattened) != set(by_key):
+        raise RuntimeError('Worker assignment must cover every episode exactly once')
+    return [by_key[tuple(key)] for key in mapping['assignments'][args.rank]]
 
 @torch.no_grad()
 def worker(args,episodes,vae,cache,device):
@@ -236,9 +258,11 @@ def worker(args,episodes,vae,cache,device):
         gpu=str(torch.cuda.get_device_properties(device)),hostname=os.uname().nodename,
         encoding=encoding_settings(args)))
     fingerprints=json.loads((args.run_dir/'input_fingerprints.json').read_text())
-    assigned=assigned_episodes(episodes,args.world_size)[args.rank]
+    args._reuse_catalog = load_catalog(args.run_dir,args.cache_dir,cache.namespace,PREPROCESSING)
+    assigned=worker_episodes(args,episodes)
     state=dict(state='running',rank=args.rank,namespace=cache.namespace,total_windows=sum(e['length'] for e in assigned),
-        total_episodes=len(assigned),completed_windows=0,completed_episodes=0,pid=os.getpid(),host=os.uname().nodename,
+        total_episodes=len(assigned),completed_windows=0,completed_episodes=0,
+        reused_windows=0,existing_windows=0,encoded_windows=0,pid=os.getpid(),host=os.uname().nodename,
         encoding=encoding_settings(args),stage_seconds=dict(input_wait=0.,collate=0.,batch_wait=0.,encode=0.,write=0.))
     status=args.run_dir/f'rank{args.rank}.json'; started=time.monotonic();save_json(status,state)
     todo=[e for e in assigned if not index_path(args,e).with_suffix('.done.json').exists()]
@@ -251,7 +275,10 @@ def worker(args,episodes,vae,cache,device):
                 index=index_path(args,e);done_path=index.with_suffix('.done.json');path=packed_path(args,cache.namespace,e)
                 check_sources(e,fingerprints)
                 if done_path.exists():
-                    verify_done(args,e,cache.namespace,fingerprints)
+                    done,_=verify_done(args,e,cache.namespace,fingerprints,read_payload=False)
+                    state['existing_windows'] += e['length']
+                    if done.get('payload_namespace',cache.namespace) != cache.namespace:
+                        state['reused_windows'] += e['length']
                 else:
                     before=time.monotonic()
                     canvas=future.result(); following=next(pending,None)
@@ -286,10 +313,11 @@ def worker(args,episodes,vae,cache,device):
                     save_json(done_path,dict(namespace=cache.namespace,dataset=e['dataset'],episode_index=e['episode_index'],
                         windows=len(keys),index_sha256=digest,packed_sha256=filehash,all_window_checksums_verified=True))
                     state['stage_seconds']['write'] += time.monotonic()-before
+                    state['encoded_windows'] += e['length']
                     del latents
                 state['completed_windows']+=e['length'];state['completed_episodes']+=1
                 state['elapsed_seconds']=time.monotonic()-started
-                state['windows_per_second']=state['completed_windows']/state['elapsed_seconds']
+                state['windows_per_second']=state['encoded_windows']/state['elapsed_seconds']
                 state['peak_gpu_gib']=torch.cuda.max_memory_allocated()/(1<<30)
                 save_json(status,state)
                 if state['completed_episodes']%10==0: print('PROGRESS',json.dumps(state),flush=True)
@@ -301,6 +329,7 @@ def publish(args,episodes):
     smoke_report=json.loads((args.run_dir/'smoke.json').read_text());namespace=smoke_report['namespace']
     fingerprints=json.loads((args.run_dir/'input_fingerprints.json').read_text())
     settings=json.loads((args.run_dir/'settings.json').read_text())
+    args._reuse_catalog = load_catalog(args.run_dir,args.cache_dir,namespace,PREPROCESSING)
     if sha(args.run_dir/'episodes.json')!=settings['episodes_sha256'] or sha(args.run_dir/'input_fingerprints.json')!=settings['fingerprints_sha256']:
         raise RuntimeError('Run inventory changed')
     for rank in range(args.world_size):
@@ -316,14 +345,20 @@ def publish(args,episodes):
             done,keys=verify_done(args,e,namespace,fingerprints,read_payload=True)
             f.write(bytes.fromhex(''.join(keys)))
             manifest.append(dict(dataset=e['dataset'],episode_index=e['episode_index'],windows=e['length'],
-                key_offset=offset,index_sha256=done['index_sha256'],packed_sha256=done['packed_sha256']))
+                key_offset=offset,index_sha256=done['index_sha256'],packed_sha256=done['packed_sha256'],
+                payload_namespace=done.get('payload_namespace',namespace),
+                encoding_origin=done.get('encoding_origin','batched')))
             offset+=e['length']*32
             if number%100==0: print('AUDIT',number,len(episodes),flush=True)
         f.flush();os.fsync(f.fileno())
     os.replace(temporary,args.run_dir/'keys.bin')
     save_json(args.run_dir/'packed_manifest.json',manifest)
     save_json(args.run_dir/'validation.json',dict(status='passed',namespace=namespace,identity=smoke_report['identity'],
-        preprocessing=PREPROCESSING,encoding=settings['encoding'],latent_shape=list(LATENT_SHAPE),latent_dtype='torch.bfloat16',
+        preprocessing=PREPROCESSING,encoding=settings['encoding'],
+        reused_namespaces=sorted(args._reuse_catalog['sources']),
+        reused_windows=sum(m['windows'] for m in manifest if m['payload_namespace']!=namespace),
+        reuse_sources_sha256=settings.get('reuse_sources_sha256'),
+        latent_shape=list(LATENT_SHAPE),latent_dtype='torch.bfloat16',
         episode_count=len(episodes),window_count=sum(e['length'] for e in episodes),all_starts_covered_once=True,
         all_indices_sha256_verified=True,all_packed_payloads_verified=True,all_source_fingerprints_verified=True,
         episodes_sha256=sha(args.run_dir/'episodes.json'),fingerprints_sha256=sha(args.run_dir/'input_fingerprints.json'),
