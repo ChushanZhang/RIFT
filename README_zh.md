@@ -19,9 +19,9 @@ RIFT 通过 flow matching 和视频联合训练学习融合未来信息的动作
 <table>
   <tr><th>篮筐堆叠</th><th>试管混合</th><th>物体分类</th></tr>
   <tr>
-    <td width="33%"><video src="https://github.com/user-attachments/assets/c9e1d67f-2696-454b-a3b0-08aaa960e630" controls></video></td>
-    <td width="33%"><video src="https://github.com/user-attachments/assets/714e534f-84ca-4d8b-9c06-18ba2a5e38d6" controls></video></td>
-    <td width="33%"><video src="https://github.com/user-attachments/assets/b8d897fe-e1c6-40ea-b40b-3bcf5ea90a8e" controls></video></td>
+    <td width="33%"><video src="https://github.com/user-attachments/assets/2928212a-961a-4a30-8672-97daee608d52" controls></video></td>
+    <td width="33%"><video src="https://github.com/user-attachments/assets/bf179b18-5ce8-4bd8-b85e-606d90bf202f" controls></video></td>
+    <td width="33%"><video src="https://github.com/user-attachments/assets/93fdfa27-0d9f-4733-b7e2-8f1edd0c853d" controls></video></td>
   </tr>
 </table>
 
