@@ -162,6 +162,9 @@ class RobotVideoDataset(torch.utils.data.Dataset):
             if settings.get("contract") == "libero_2cam224_v1":
                 from rift.utils.libero_indexed_vae_cache import LiberoIndexedVaeLatentReader
                 reader_class = LiberoIndexedVaeLatentReader
+            elif settings.get("contract") == "robotwin_3cam384_v1":
+                from rift.utils.robotwin_indexed_vae_cache import RobotwinIndexedVaeLatentReader
+                reader_class = RobotwinIndexedVaeLatentReader
             else:
                 from rift.utils.indexed_vae_cache import IndexedVaeLatentReader
                 reader_class = IndexedVaeLatentReader

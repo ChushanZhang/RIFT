@@ -1,0 +1,8 @@
+# Requires completed VAE and text validation for the selected run.
+defaults:
+  - robotwin
+  - _self_
+train:
+  text_embedding_cache_dir: ${oc.env:ROBOTWIN_TEXT_DIR,./data/text_embeds_cache/robotwin}
+  vae_cache_dir: ${oc.env:ROBOTWIN_CACHE_DIR,./data/vae-cache/robotwin_3cam384}
+  vae_cache_index_dir: ${oc.env:ROBOTWIN_RUN_DIR,./data/vae-cache/robotwin_3cam384/_precompute/batched}

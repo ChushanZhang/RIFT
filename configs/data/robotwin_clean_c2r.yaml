@@ -1,0 +1,16 @@
+# 2500 Clean episodes / 549787 frames. No persistent VAE or text cache prepared.
+defaults:
+- robotwin
+- robotwin_clean_c2r_exclusions
+- _self_
+train:
+  dataset_dirs:
+  - ./data/robotwin_clean_c2r/robotwin2.0
+  expected_total_episodes:
+    robotwin2.0: 27500
+  val_set_proportion: 0.0
+  is_training_set: true
+  pretrained_norm_stats: ./data/robotwin_clean_c2r/dataset_stats.json
+  text_embedding_cache_dir: ./data/text_embeds_cache/robotwin_clean_c2r
+  vae_cache_index_dir: null
+  vae_cache_dir: null
