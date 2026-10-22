@@ -11,6 +11,10 @@ The encoder uses `OnlineVaeEncoder`, which sends a whole batch to
 `--encode-mode cudagraphs` enables the existing CUDA Graph wrapper. Tail
 batches repeat their final window to the full batch size; padding is discarded
 before writing. This keeps one GPU shape and one graph per worker.
+One CPU batch is prepared ahead of the GPU: input keys still hash the original
+float32 pixels, while pinned BF16 tensors reduce transfer volume and let the
+next batch's assembly/hashing overlap the current encoding. Batch preparation
+time can overlap encoder time; `batch_wait` reports the remaining exposed wait.
 
 Batching can change BF16 convolution rounding. The cache namespace includes
 the encoding mode, batch size and tail policy, along with the frozen weights,

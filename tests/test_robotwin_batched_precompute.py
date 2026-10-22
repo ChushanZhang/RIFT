@@ -9,7 +9,10 @@ import torch
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'scripts'))
 from precompute_robotwin_cache import (
     check_settings, encode_batch, encoding_settings, make_encoder, numerical_report,
+    prefetched_batches,
 )
+from robotwin_vae_inputs import make_window
+from rift.utils.vae_latent_cache import tensor_digest
 
 
 class RecordingVae(torch.nn.Module):
@@ -77,3 +80,13 @@ def test_invalid_tail_batch_is_rejected():
     encoder = make_encoder(RecordingVae(), options())
     with pytest.raises(ValueError, match='1..batch_size'):
         encode_batch(encoder, torch.zeros(5, 3, 9, 8, 8), 4)
+
+
+def test_prefetch_preserves_original_float32_keys_values_and_tail_order():
+    canvas = torch.rand(7, 3, 384, 320)
+    expected = [make_window(canvas, frame) for frame in range(len(canvas))]
+    batches = list(prefetched_batches(canvas, 4, pin_memory=False))
+    assert [len(batch[0]) for batch in batches] == [4, 3]
+    actual = torch.cat([batch[0] for batch in batches])
+    torch.testing.assert_close(actual, torch.stack(expected).to(torch.bfloat16), rtol=0, atol=0)
+    assert [key for batch in batches for key in batch[1]] == [tensor_digest(window) for window in expected]

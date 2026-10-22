@@ -81,6 +81,32 @@ def encode_batch(encoder, videos, batch_size):
     return encoder(videos)[:count]
 
 
+def prefetched_batches(canvas, batch_size, *, pin_memory):
+    """Prepare one CPU batch ahead while the main thread runs the GPU encoder."""
+    def prepare(start):
+        before = time.monotonic()
+        windows = [make_window(canvas, frame)
+                   for frame in range(start, min(start + batch_size, len(canvas)))]
+        keys = [tensor_digest(window) for window in windows]
+        # Hash the original float32 pixels, then transfer only BF16 input bytes.
+        videos = torch.stack(windows).to(dtype=torch.bfloat16)
+        if pin_memory:
+            videos = videos.pin_memory()
+        return videos, keys, time.monotonic() - before
+
+    with ThreadPoolExecutor(max_workers=1) as pool:
+        starts = iter(range(0, len(canvas), batch_size))
+        following = next(starts, None)
+        future = pool.submit(prepare, following) if following is not None else None
+        while future is not None:
+            before = time.monotonic()
+            videos, keys, seconds = future.result()
+            waited = time.monotonic() - before
+            following = next(starts, None)
+            future = pool.submit(prepare, following) if following is not None else None
+            yield videos, keys, seconds, waited
+
+
 def numerical_report(actual, reference):
     actual, reference = actual.float().cpu(), reference.float().cpu()
     difference = actual - reference
@@ -213,7 +239,7 @@ def worker(args,episodes,vae,cache,device):
     assigned=assigned_episodes(episodes,args.world_size)[args.rank]
     state=dict(state='running',rank=args.rank,namespace=cache.namespace,total_windows=sum(e['length'] for e in assigned),
         total_episodes=len(assigned),completed_windows=0,completed_episodes=0,pid=os.getpid(),host=os.uname().nodename,
-        encoding=encoding_settings(args),stage_seconds=dict(input_wait=0.,collate=0.,encode=0.,write=0.))
+        encoding=encoding_settings(args),stage_seconds=dict(input_wait=0.,collate=0.,batch_wait=0.,encode=0.,write=0.))
     status=args.run_dir/f'rank{args.rank}.json'; started=time.monotonic();save_json(status,state)
     todo=[e for e in assigned if not index_path(args,e).with_suffix('.done.json').exists()]
     try:
@@ -232,11 +258,12 @@ def worker(args,episodes,vae,cache,device):
                     state['stage_seconds']['input_wait'] += time.monotonic()-before
                     future=pool.submit(prepare_episode,following) if following else None
                     latents=[];keys=[]
-                    for start in range(0,e['length'],args.batch_size):
+                    for cpu_videos,batchkeys,prepared,waited in prefetched_batches(
+                            canvas,args.batch_size,pin_memory=True):
+                        state['stage_seconds']['collate'] += prepared
+                        state['stage_seconds']['batch_wait'] += waited
                         before=time.monotonic()
-                        videos,batchkeys=collate_windows([make_window(canvas,s) for s in range(start,min(e['length'],start+args.batch_size))],device)
-                        state['stage_seconds']['collate'] += time.monotonic()-before
-                        before=time.monotonic()
+                        videos=cpu_videos.to(device=device,non_blocking=True)
                         result=encode_batch(encoder,videos,args.batch_size).to('cpu').contiguous()
                         state['stage_seconds']['encode'] += time.monotonic()-before
                         if result.dtype!=torch.bfloat16 or tuple(result.shape[1:])!=LATENT_SHAPE or not torch.isfinite(result).all():
