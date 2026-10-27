@@ -286,7 +286,3 @@ If you find this repository useful, please cite:
   year={2026}
 }
 ```
-
-## Archived experiment jobs
-
-Historical Isaac job scripts, logs, results, weights and caches are available in the public [research-vla/isaac-jobs archive](https://huggingface.co/datasets/research-vla/isaac-jobs). See the [verified snapshot, directory index and restore instructions](docs/archives/isaac-jobs-20261027.md) for records removed from local scratch storage.
